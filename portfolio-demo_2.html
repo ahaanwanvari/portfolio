@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATLAS Demo</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html,body{height:100%;overflow:hidden;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#141210;color:#e8e0d4;}
+        .wrap{height:100%;display:flex;flex-direction:column;padding:10px;}
+        .hdr{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#1e1a16;border:1px solid #2a2520;border-radius:6px;margin-bottom:8px;flex-shrink:0;}
+        .hdr h1{font-size:.85rem;font-weight:700;color:#c97b3a;}
+        .hdr-sub{font-size:.55rem;color:#7a7068;margin-top:1px;}
+        .hdr-r{display:flex;align-items:center;gap:8px;font-size:.6rem;color:#7a7068;font-family:monospace;}
+        .dot{width:6px;height:6px;border-radius:50%;background:#5ecd78;}
+        .dot.routing{background:#c97b3a;}
+        .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px;flex-shrink:0;}
+        .st{background:#1e1a16;border:1px solid #2a2520;border-radius:4px;padding:6px;text-align:center;}
+        .st-v{font-family:monospace;font-size:1rem;font-weight:700;}
+        .st-l{font-size:.5rem;color:#7a7068;text-transform:uppercase;letter-spacing:.5px;margin-top:1px;}
+        .queue-sec{flex-shrink:0;margin-bottom:8px;}
+        .sec-title{font-size:.65rem;font-weight:700;color:#7a7068;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+        .queue{min-height:24px;}
+        .qi{background:#1e1a16;border:1px solid #2a2520;border-left:3px solid #c97b3a;border-radius:4px;padding:8px 10px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;}
+        .qi.show{opacity:1;transform:translateY(0);}
+        .qi.assigned{border-left-color:#5ecd78;}
+        .qi.pending{border-left-color:#e8b830;}
+        .qi.resolved{border-left-color:#5ecd78;opacity:.5;}
+        .qi-info .qi-name{font-size:.72rem;font-weight:600;}
+        .qi-info .qi-meta{font-size:.6rem;color:#7a7068;margin-top:2px;}
+        .qi-info .qi-meta span{margin-right:10px;}
+        .qi-badge{padding:2px 6px;border-radius:3px;font-size:.55rem;font-weight:700;letter-spacing:.3px;}
+        .qi-badge.S{background:#1a2e1f;color:#5ecd78;}
+        .qi-badge.M{background:#2a2210;color:#e8b830;}
+        .qi-badge.L{background:#2e1e14;color:#e8944a;}
+        .qi-badge.XL{background:#2e1a1a;color:#f07070;}
+        .qi-right{display:flex;align-items:center;gap:6px;}
+        .qi-analyst{font-size:.6rem;font-weight:600;color:#c97b3a;}
+        .qi-status{font-size:.55rem;font-weight:600;}
+        .empty{color:#5a5550;font-size:.6rem;font-style:italic;padding:4px;}
+        .tl-sec{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;}
+        .tl{flex:1;overflow:hidden;background:#1a1610;border:1px solid #2a2520;border-radius:4px;padding:8px;}
+        .te{padding:5px 8px;margin-bottom:4px;border-radius:3px;font-size:.62rem;opacity:0;transform:translateY(4px);transition:opacity .3s,transform .3s;display:flex;align-items:center;gap:6px;}
+        .te.show{opacity:1;transform:translateY(0);}
+        .te .icon{flex-shrink:0;}
+        .te .lbl{font-weight:600;}
+        .te .det{color:#7a7068;margin-left:auto;font-family:monospace;font-size:.55rem;}
+        .te.green{background:#1a2e1f;} .te.green .lbl{color:#5ecd78;}
+        .te.amber{background:#2a2210;} .te.amber .lbl{color:#e8b830;}
+        .te.red{background:#2e1a1a;} .te.red .lbl{color:#f07070;}
+        .te.blue{background:#1a2230;} .te.blue .lbl{color:#70b0f0;}
+        .te.bronze{background:#2a1e14;} .te.bronze .lbl{color:#c97b3a;}
+        .te.grey{background:#1e1a16;} .te.grey .lbl{color:#7a7068;}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="hdr">
+        <div>
+            <h1>ATLAS</h1>
+            <div class="hdr-sub">Automated Ticket Leveling & Assignment System</div>
+        </div>
+        <div class="hdr-r"><div class="dot" id="dot"></div><span id="status">Idle</span></div>
+    </div>
+    <div class="stats">
+        <div class="st"><div class="st-v" style="color:#e8e0d4" id="s0">0</div><div class="st-l">Ingested</div></div>
+        <div class="st"><div class="st-v" style="color:#c97b3a" id="s1">0</div><div class="st-l">Assigned</div></div>
+        <div class="st"><div class="st-v" style="color:#5ecd78" id="s2">0</div><div class="st-l">Resolved</div></div>
+        <div class="st"><div class="st-v" style="color:#e8b830" id="s3">0</div><div class="st-l">Pending</div></div>
+        <div class="st"><div class="st-v" style="color:#f07070" id="s4">0</div><div class="st-l">PTO</div></div>
+    </div>
+    <div class="queue-sec">
+        <div class="sec-title">Active Tickets</div>
+        <div class="queue" id="queue"><div class="empty" id="emptyQ">No tickets in queue.</div></div>
+    </div>
+    <div class="tl-sec">
+        <div class="sec-title">Event Timeline</div>
+        <div class="tl" id="tl"></div>
+    </div>
+</div>
+<script>
+const dot=document.getElementById('dot'),status=document.getElementById('status'),queue=document.getElementById('queue'),tl=document.getElementById('tl'),emptyQ=document.getElementById('emptyQ');
+const s=[0,0,0,0,0];
+function up(){for(let i=0;i<5;i++)document.getElementById('s'+i).textContent=s[i];}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function setRouting(on){if(on){dot.classList.add('routing');status.textContent='Routing...';}else{dot.classList.remove('routing');status.textContent='Idle';}}
+
+function addEvent(icon,label,color,detail){
+    const d=document.createElement('div');d.className='te '+color;
+    d.innerHTML=`<span class="icon">${icon}</span><span class="lbl">${label}</span><span class="det">${detail}</span>`;
+    tl.prepend(d);setTimeout(()=>d.classList.add('show'),30);
+    if(tl.children.length>12)tl.removeChild(tl.lastChild);
+}
+
+function addQueueItem(id,cart,tier,score,analyst){
+    emptyQ.style.display='none';
+    const d=document.createElement('div');d.className='qi';d.id='qi-'+id;
+    d.innerHTML=`<div class="qi-info"><div class="qi-name">#${id} &mdash; ${cart}</div><div class="qi-meta"><span>Score: ${score}</span><span>Assigned: ${analyst}</span></div></div><div class="qi-right"><span class="qi-badge ${tier}">${tier}</span><span class="qi-analyst">${analyst}</span></div>`;
+    queue.appendChild(d);setTimeout(()=>d.classList.add('show'),30);
+}
+
+function resolveItem(id){
+    const el=document.getElementById('qi-'+id);
+    if(!el)return;
+    el.classList.add('resolved');
+    el.querySelector('.qi-right').innerHTML=`<span class="qi-status" style="color:#5ecd78">Resolved</span>`;
+}
+
+function removeItem(id){const el=document.getElementById('qi-'+id);if(el){el.style.transition='opacity .3s';el.style.opacity='0';setTimeout(()=>el.remove(),300);}}
+
+function ptoItem(id){
+    const el=document.getElementById('qi-'+id);
+    if(!el)return;
+    el.classList.remove('assigned');el.classList.add('pending');
+    el.querySelector('.qi-right').innerHTML=`<span class="qi-status" style="color:#e8b830">Unassigned</span>`;
+}
+
+const TICKETS=[
+    {id:1001,cart:"Standard SaaS",score:"4,200",rec:"REVIEW",tier:"S",analyst:"Jordan",level:"L1",reason:"Low-risk cart. Routine check."},
+    {id:1002,cart:"Cloud Infra",score:"7,800",rec:"REVIEW",tier:"L",analyst:"Riley",level:"L3",reason:"High-risk cart. Score=7800."},
+    {id:1003,cart:"Reseller",score:"5,500",rec:"REVIEW",tier:"M",analyst:"Taylor",level:"L2",reason:"Medium-risk cart. Moderate."},
+    {id:1004,cart:"Enterprise",score:"1,200",rec:"REVIEW",tier:"XL",analyst:"Devon",level:"E1",reason:"Low score = ambiguous. Bumped L→XL."},
+    {id:1005,cart:"Cloud Infra",score:"16,500",rec:"REJECT",tier:"XL",analyst:"Devon",level:"E1",reason:"High REJECT. Complex fraud."},
+];
+
+async function cycle(){
+    s.fill(0);up();queue.innerHTML='';emptyQ.style.display='';queue.appendChild(emptyQ);tl.innerHTML='';
+
+    addEvent('⚙️','System ready','grey','round-robin active');
+    await sleep(2000);
+
+    // Ingest ticket 1
+    setRouting(true);
+    addEvent('📥','Ticket ingested','bronze','Standard SaaS · REVIEW');
+    s[0]++;up();
+    await sleep(1200);
+    setRouting(false);
+    addEvent('🏷️','Classified: Tier S','green','Low risk, routine');
+    await sleep(800);
+    addEvent('→','Assigned to Jordan (L1)','green','queue: 1/8');
+    s[1]++;up();
+    addQueueItem(1001,'Standard SaaS','S','4,200','Jordan');
+    await sleep(1800);
+
+    // Ingest ticket 2
+    setRouting(true);
+    addEvent('📥','Ticket ingested','bronze','Cloud Infra · REVIEW');
+    s[0]++;up();
+    await sleep(1200);
+    setRouting(false);
+    addEvent('🏷️','Classified: Tier L','amber','High risk cart');
+    await sleep(800);
+    addEvent('→','Assigned to Riley (L3)','green','queue: 1/10');
+    s[1]++;up();
+    addQueueItem(1002,'Cloud Infra','L','7,800','Riley');
+    await sleep(1800);
+
+    // Ingest ticket 3
+    setRouting(true);
+    addEvent('📥','Ticket ingested','bronze','Reseller · REVIEW');
+    s[0]++;up();
+    await sleep(1000);
+    setRouting(false);
+    addEvent('🏷️','Classified: Tier M','amber','Medium risk');
+    await sleep(600);
+    addEvent('→','Assigned to Taylor (L2)','green','queue: 1/10');
+    s[1]++;up();
+    addQueueItem(1003,'Reseller','M','5,500','Taylor');
+    await sleep(2000);
+
+    // Resolve ticket 1
+    addEvent('✅','Ticket #1001 resolved','green','confirmed fraud · Jordan');
+    resolveItem(1001);
+    s[1]--;s[2]++;up();
+    await sleep(1500);
+    removeItem(1001);
+    await sleep(1000);
+
+    // PTO event
+    addEvent('🚫','Riley → On PTO','red','2 tickets released');
+    s[4]++;up();
+    ptoItem(1002);
+    s[1]--;s[3]++;up();
+    await sleep(1500);
+    addEvent('🔄','#1002 returned to queue','amber','pending reassignment');
+    await sleep(1800);
+
+    // Reassign
+    setRouting(true);
+    addEvent('→','#1002 reassigned to Quinn (L3)','green','next eligible');
+    await sleep(800);
+    setRouting(false);
+    const el=document.getElementById('qi-1002');
+    if(el){el.classList.remove('pending');el.classList.add('assigned');el.querySelector('.qi-right').innerHTML=`<span class="qi-badge L">L</span><span class="qi-analyst">Quinn</span>`;}
+    s[3]--;s[1]++;up();
+    await sleep(2000);
+
+    // XL ticket with dual review
+    setRouting(true);
+    addEvent('📥','Ticket ingested','bronze','Enterprise · REVIEW');
+    s[0]++;up();
+    await sleep(1200);
+    setRouting(false);
+    addEvent('🏷️','Classified: Tier XL','red','Low score (1200) = ambiguous. Bumped.');
+    await sleep(800);
+    addEvent('⚠️','Dual review required','red','2 agents assigned');
+    await sleep(600);
+    addEvent('→','Assigned to Devon (E1)','green','primary reviewer');
+    s[1]++;up();
+    addQueueItem(1004,'Enterprise','XL','1,200','Devon');
+    await sleep(2200);
+
+    // Resolve ticket 3
+    addEvent('✅','Ticket #1003 resolved','green','legitimate · Taylor');
+    resolveItem(1003);
+    s[1]--;s[2]++;up();
+    await sleep(1200);
+    removeItem(1003);
+    await sleep(1000);
+
+    // High-value REJECT
+    setRouting(true);
+    addEvent('📥','Ticket ingested','bronze','Cloud Infra · REJECT');
+    s[0]++;up();
+    await sleep(1200);
+    setRouting(false);
+    addEvent('🏷️','Classified: Tier XL','red','REJECT score=16500. Complex fraud.');
+    await sleep(800);
+    addEvent('→','Assigned to Devon (E1)','green','queue: 2/12');
+    s[1]++;up();
+    addQueueItem(1005,'Cloud Infra','XL','16,500','Devon');
+    await sleep(2200);
+
+    // Resolve remaining
+    addEvent('✅','Ticket #1002 resolved','green','escalated · Quinn');
+    resolveItem(1002);
+    s[1]--;s[2]++;up();
+    await sleep(1200);
+    removeItem(1002);
+
+    addEvent('✅','Ticket #1004 resolved','green','confirmed fraud · Devon');
+    resolveItem(1004);
+    s[1]--;s[2]++;up();
+    await sleep(1200);
+    removeItem(1004);
+
+    // PTO return
+    addEvent('🟢','Riley back from PTO','green','re-entered rotation');
+    s[4]--;up();
+    await sleep(1500);
+
+    addEvent('✅','Ticket #1005 resolved','green','confirmed fraud · Devon');
+    resolveItem(1005);
+    s[1]--;s[2]++;up();
+    await sleep(1000);
+    removeItem(1005);
+
+    addEvent('📊','Cycle complete','grey','5 ingested, 5 resolved, 0 pending');
+    await sleep(4000);
+}
+
+async function loop(){while(true)await cycle();}
+loop();
+</script>
+</body>
+</html>

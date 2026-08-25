@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ahaan Wanvari — Security Engineer & Developer</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #06060f;
+      --glass: rgba(255, 255, 255, 0.04);
+      --glass-md: rgba(255, 255, 255, 0.06);
+      --glass-strong: rgba(255, 255, 255, 0.09);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-border-hover: rgba(255, 255, 255, 0.2);
+      --glass-shine: rgba(255, 255, 255, 0.18);
+      --accent: #8b5cf6;
+      --accent-blue: #6366f1;
+      --accent-cyan: #22d3ee;
+      --accent-glow: rgba(139, 92, 246, 0.25);
+      --text: #f8f8ff;
+      --text-secondary: #a5a5c0;
+      --text-muted: #5c5c7a;
+      --radius: 24px;
+      --radius-sm: 16px;
+      --radius-xs: 10px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== ANIMATED BACKGROUND MESH ===== */
+    .mesh-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .mesh-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.6;
+    }
+
+    .orb-1 {
+      width: 60vw; height: 60vw;
+      max-width: 800px; max-height: 800px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.4), transparent 60%);
+      top: -20%; right: -15%;
+      animation: orb-drift 22s ease-in-out infinite;
+    }
+
+    .orb-2 {
+      width: 50vw; height: 50vw;
+      max-width: 650px; max-height: 650px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.3), transparent 60%);
+      bottom: -10%; left: -15%;
+      animation: orb-drift 28s ease-in-out infinite reverse;
+    }
+
+    .orb-3 {
+      width: 35vw; height: 35vw;
+      max-width: 500px; max-height: 500px;
+      background: radial-gradient(circle, rgba(34, 211, 238, 0.2), transparent 60%);
+      top: 45%; left: 40%;
+      animation: orb-drift 18s ease-in-out infinite 3s;
+    }
+
+    .orb-4 {
+      width: 30vw; height: 30vw;
+      max-width: 400px; max-height: 400px;
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.15), transparent 60%);
+      top: 10%; left: 10%;
+      animation: orb-drift 25s ease-in-out infinite 5s;
+    }
+
+    @keyframes orb-drift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -20px) scale(1.05); }
+      66% { transform: translate(-20px, 15px) scale(0.95); }
+    }
+
+    /* Noise overlay */
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.025;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ===== LIQUID GLASS TEXT ===== */
+    .glass-text {
+      color: rgba(255, 255, 255, 0.08);
+      -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.4);
+      text-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.15),
+        0 -1px 0 rgba(0, 0, 0, 0.3),
+        0 0 4px rgba(255, 255, 255, 0.08),
+        0 4px 16px rgba(139, 92, 246, 0.08);
+      paint-order: stroke fill;
+    }
+
+    .glass-text-accent {
+      color: rgba(139, 92, 246, 0.12);
+      -webkit-text-stroke: 1.5px rgba(167, 139, 250, 0.55);
+      text-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.12),
+        0 -1px 0 rgba(0, 0, 0, 0.3),
+        0 0 6px rgba(139, 92, 246, 0.2),
+        0 4px 20px rgba(139, 92, 246, 0.12);
+      paint-order: stroke fill;
+    }
+
+    /* ===== GLASS PANELS ===== */
+    .glass-panel {
+      background: var(--glass);
+      backdrop-filter: blur(20px) saturate(1.3);
+      -webkit-backdrop-filter: blur(20px) saturate(1.3);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 var(--glass-shine),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+      transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .glass-panel:hover {
+      background: var(--glass-md);
+      border-color: var(--glass-border-hover);
+      box-shadow:
+        0 16px 48px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 var(--glass-shine),
+        0 0 30px var(--accent-glow);
+      transform: translateY(-3px);
+    }
+
+    /* ===== NAVIGATION ===== */
+    .navbar {
+      position: fixed;
+      top: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: rgba(6, 6, 15, 0.4);
+      backdrop-filter: blur(30px) saturate(1.5);
+      -webkit-backdrop-filter: blur(30px) saturate(1.5);
+      border: 1px solid var(--glass-border);
+      border-radius: 100px;
+      padding: 0.6rem 1.75rem;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 var(--glass-shine);
+    }
+
+    .navbar-content {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 800;
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.1);
+      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
+      text-shadow: 0 0 3px rgba(255, 255, 255, 0.15);
+      paint-order: stroke fill;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      -webkit-text-stroke-color: rgba(255, 255, 255, 0.7);
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: color 0.2s;
+      letter-spacing: 0.2px;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text);
+    }
+
+    /* ===== SECTIONS ===== */
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 7rem 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      padding: 0.35rem 0.9rem;
+      background: rgba(139, 92, 246, 0.08);
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      border-radius: 100px;
+      backdrop-filter: blur(8px);
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 0.75rem;
+      line-height: 1.15;
+    }
+
+    .section-desc {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      max-width: 500px;
+      margin-bottom: 3rem;
+      line-height: 1.75;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-glass {
+      padding: 4.5rem 4rem;
+      max-width: 780px;
+      width: 100%;
+      background: var(--glass-md);
+      backdrop-filter: blur(30px) saturate(1.4);
+      -webkit-backdrop-filter: blur(30px) saturate(1.4);
+      border: 1px solid var(--glass-border-hover);
+      border-radius: 32px;
+      box-shadow:
+        0 24px 64px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 var(--glass-shine),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+      animation: hero-float 6s ease-in-out infinite;
+    }
+
+    @keyframes hero-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 100px;
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: blink 2s infinite;
+      box-shadow: 0 0 6px var(--accent-glow);
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 8vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.75rem 1.6rem;
+      border-radius: 14px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.25s;
+      cursor: pointer;
+      border: none;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      background: #7c3aed;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.4);
+    }
+
+    .btn-glass {
+      background: var(--glass-md);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      color: var(--text);
+      box-shadow: inset 0 1px 0 var(--glass-shine);
+    }
+
+    .btn-glass:hover {
+      background: var(--glass-strong);
+      border-color: var(--glass-border-hover);
+      transform: translateY(-2px);
+    }
+
+    .scroll-cta {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .scroll-cta span {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .scroll-pill {
+      width: 26px; height: 40px;
+      border-radius: 13px;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      background: var(--glass);
+      backdrop-filter: blur(8px);
+    }
+
+    .scroll-pill::after {
+      content: '';
+      position: absolute;
+      top: 6px; left: 50%;
+      transform: translateX(-50%);
+      width: 4px; height: 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.4);
+      animation: scroll-bob 2s infinite;
+    }
+
+    @keyframes scroll-bob {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+      100% { transform: translateX(-50%) translateY(14px); opacity: 0; }
+    }
+
+    /* ===== BENTO GRID (About) ===== */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: auto;
+      gap: 1rem;
+    }
+
+    .bento-item {
+      padding: 1.75rem;
+    }
+
+    .bento-item.span-2 {
+      grid-column: span 2;
+    }
+
+    .bento-item.span-full {
+      grid-column: span 3;
+    }
+
+    .bento-item h3 {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .bento-item p {
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+
+    .bento-bio p {
+      font-size: 0.95rem;
+      line-height: 1.85;
+      margin-bottom: 1rem;
+    }
+
+    .bento-bio p:last-child {
+      margin-bottom: 0;
+    }
+
+    .bento-stat {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .bento-stat .number {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 0.25rem;
+    }
+
+    .bento-stat .label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ===== EXPERIENCE ===== */
+    .experience-carousel { max-width: 850px; }
+
+    .carousel-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .carousel-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      box-shadow: inset 0 1px 0 var(--glass-shine);
+    }
+
+    .carousel-btn:hover {
+      background: var(--glass-md);
+      color: var(--text);
+      border-color: var(--glass-border-hover);
+    }
+
+    .carousel-dots { display: flex; gap: 0.3rem; }
+
+    .carousel-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .carousel-dot.active {
+      background: var(--accent);
+      width: 20px;
+      border-radius: 3px;
+      box-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    .exp-card {
+      padding: 2.5rem;
+      animation: card-in 0.4s ease;
+    }
+
+    @keyframes card-in {
+      from { opacity: 0; transform: translateY(10px) scale(0.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .exp-header h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+
+    .exp-date {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: var(--glass-md);
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(8px);
+    }
+
+    .exp-company {
+      color: var(--accent);
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .exp-desc {
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+    }
+
+    .exp-list {
+      list-style: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .exp-list li {
+      color: var(--text-secondary);
+      padding: 0.45rem 0 0.45rem 1.25rem;
+      position: relative;
+      font-size: 0.84rem;
+      line-height: 1.6;
+    }
+
+    .exp-list li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0.9rem;
+      width: 5px; height: 5px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--accent-glow);
+    }
+
+    .exp-list li strong { color: var(--text); font-weight: 700; }
+
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .tag {
+      background: var(--glass-md);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      padding: 0.28rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    /* ===== PROJECTS ===== */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .project-card {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      overflow: hidden;
+    }
+
+    .project-card:hover {
+      border-color: rgba(139, 92, 246, 0.4);
+      box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 var(--glass-shine),
+        0 0 35px var(--accent-glow);
+      transform: translateY(-5px);
+    }
+
+    .project-card .card-top {
+      padding: 1.75rem 1.75rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .card-icon {
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      font-weight: 900;
+      flex-shrink: 0;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+
+    .project-card:hover .card-icon { transform: scale(1.1); }
+
+    .card-icon.red { background: rgba(239, 68, 68, 0.18); color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
+    .card-icon.blue { background: rgba(59, 130, 246, 0.18); color: #93c5fd; border-color: rgba(59, 130, 246, 0.3); }
+    .card-icon.green { background: rgba(16, 185, 129, 0.18); color: #6ee7b7; border-color: rgba(16, 185, 129, 0.3); }
+    .card-icon.purple { background: rgba(139, 92, 246, 0.18); color: #c4b5fd; border-color: rgba(139, 92, 246, 0.3); }
+    .card-icon.orange { background: rgba(245, 158, 11, 0.18); color: #fcd34d; border-color: rgba(245, 158, 11, 0.3); }
+    .card-icon.teal { background: rgba(20, 184, 166, 0.18); color: #5eead4; border-color: rgba(20, 184, 166, 0.3); }
+
+    .card-info h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      margin-bottom: 0.1rem;
+    }
+
+    .card-info .meta {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .project-card .card-body {
+      padding: 0 1.75rem 1.5rem;
+      flex: 1;
+    }
+
+    .project-card .card-body p {
+      color: var(--text-secondary);
+      font-size: 0.84rem;
+      line-height: 1.7;
+    }
+
+    .project-card .card-body a {
+      color: var(--accent);
+      text-decoration: underline;
+      font-weight: 600;
+    }
+
+    .project-card .card-footer {
+      padding: 1rem 1.75rem;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .project-card.has-demo .card-footer::after {
+      content: '\25B6  Demo';
+      margin-left: auto;
+      color: var(--accent);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== CONTACT ===== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .contact-card {
+      padding: 2rem 1.5rem;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .contact-card:hover {
+      border-color: rgba(139, 92, 246, 0.4);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3), 0 0 20px var(--accent-glow);
+      transform: translateY(-4px);
+    }
+
+    .contact-card .icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    .contact-card h3 {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .contact-card .value {
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      border-top: 1px solid var(--glass-border);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== SCROLL REVEAL ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .navbar { padding: 0.5rem 1.25rem; }
+      .navbar-content { gap: 1.25rem; }
+      .nav-links { gap: 1rem; }
+
+      .bento-grid {
+        grid-template-columns: 1fr;
+      }
+      .bento-item.span-2,
+      .bento-item.span-full {
+        grid-column: span 1;
+      }
+
+      .projects-grid { grid-template-columns: 1fr; }
+
+      section { padding: 5rem 1.25rem; }
+
+      .hero-glass { padding: 3rem 2rem; }
+      .hero h1 { font-size: 2.5rem; letter-spacing: -1px; }
+
+      .exp-card { padding: 1.75rem; }
+    }
+
+    @media (max-width: 480px) {
+      .navbar { border-radius: 16px; top: 0.5rem; left: 0.5rem; right: 0.5rem; transform: none; }
+      .nav-links { gap: 0.75rem; }
+      .nav-links a { font-size: 0.72rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Animated background -->
+  <div class="mesh-bg">
+    <div class="mesh-orb orb-1"></div>
+    <div class="mesh-orb orb-2"></div>
+    <div class="mesh-orb orb-3"></div>
+    <div class="mesh-orb orb-4"></div>
+  </div>
+  <div class="noise"></div>
+
+  <!-- Navigation pill -->
+  <nav class="navbar">
+    <div class="navbar-content">
+      <a href="/" class="logo">ahaan</a>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="/projects.html">Demos</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="home">
+      <div class="hero-glass">
+        <div class="hero-badge">Security Engineer & Developer</div>
+        <h1><span class="glass-text">Build </span><span class="glass-text-accent">Secure</span><span class="glass-text"> Systems</span></h1>
+        <p>Cybersecurity engineer crafting intelligent security platforms at Rackspace. Automation, threat intelligence, and solving real security problems.</p>
+        <div class="hero-cta">
+          <a href="#experience" class="btn btn-primary">Experience</a>
+          <a href="/projects.html" class="btn btn-glass">Live Demos</a>
+        </div>
+      </div>
+      <div class="scroll-cta" onclick="window.scrollBy({top: window.innerHeight * 0.85, behavior: 'smooth'})">
+        <span>Scroll</span>
+        <div class="scroll-pill"></div>
+      </div>
+    </section>
+
+    <!-- About — Bento Grid -->
+    <section id="about" class="reveal">
+      <div class="section-label">About</div>
+      <h2 class="section-title glass-text">Who I am</h2>
+      <div class="section-desc">Security-focused engineer combining deep security knowledge with scalable architecture.</div>
+
+      <div class="bento-grid">
+        <div class="glass-panel bento-item span-2 bento-bio">
+          <p>I'm a security-focused engineer currently interning at Rackspace Technologies, where I design vulnerability intelligence platforms and automated incident response systems.</p>
+          <p>With a background in penetration testing, network security, and full-stack development, I build systems that solve real security problems and make analysts' lives easier.</p>
+        </div>
+        <div class="glass-panel bento-item bento-stat">
+          <div class="number glass-text-accent">3</div>
+          <div class="label">Platforms Built</div>
+        </div>
+        <div class="glass-panel bento-item">
+          <h3>Security</h3>
+          <p>Pen Testing, Vuln Management, Threat Intel, MITRE ATT&CK</p>
+        </div>
+        <div class="glass-panel bento-item">
+          <h3>Development</h3>
+          <p>Python, JavaScript, React, API Design, System Architecture</p>
+        </div>
+        <div class="glass-panel bento-item">
+          <h3>Platforms</h3>
+          <p>AWS, Azure, Entra ID, Shodan, Recorded Future, Cortex XDR</p>
+        </div>
+        <div class="glass-panel bento-item bento-stat">
+          <div class="number glass-text-accent">5+</div>
+          <div class="label">Certifications</div>
+        </div>
+        <div class="glass-panel bento-item span-2">
+          <h3>Credentials</h3>
+          <p>Security+, Network+, PenTest+, CCNA, NCL Top 3 Team — always learning, always competing.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience" class="reveal">
+      <div class="section-label">Experience</div>
+      <h2 class="section-title glass-text">Where I've worked</h2>
+      <div class="section-desc">Internships and key roles in enterprise security.</div>
+
+      <div class="experience-carousel">
+        <div class="carousel-nav">
+          <button class="carousel-btn" onclick="prevExp()" aria-label="Previous">&#8592;</button>
+          <div class="carousel-dots">
+            <div class="carousel-dot active" onclick="goExp(0)"></div>
+            <div class="carousel-dot" onclick="goExp(1)"></div>
+            <div class="carousel-dot" onclick="goExp(2)"></div>
+          </div>
+          <button class="carousel-btn" onclick="nextExp()" aria-label="Next">&#8594;</button>
+        </div>
+
+        <div class="glass-panel exp-card" id="exp0">
+          <div class="exp-header">
+            <div>
+              <h3>Global Enterprise Security Intern</h3>
+              <div class="exp-company">Rackspace Technologies</div>
+            </div>
+            <span class="exp-date">Jun 2026 – Present</span>
+          </div>
+          <p class="exp-desc">Designing vulnerability intelligence and threat response platforms that centralize security data and automate incident workflows.</p>
+          <ul class="exp-list">
+            <li><strong>CERBERUS</strong> — CISA KEV, EPSS, Shodan, MITRE ATT&CK unified vuln analysis</li>
+            <li><strong>ACER</strong> — Automated credential exposure response with Recorded Future + Entra</li>
+            <li><strong>ATLAS</strong> — Intelligent ticket routing for security review workflows</li>
+            <li>Human-in-the-loop automation balancing speed with analyst control</li>
+            <li>Collaborated with SOC, Threat Intelligence, and Compliance teams</li>
+          </ul>
+          <div class="tech-tags">
+            <span class="tag">Python</span>
+            <span class="tag">APIs</span>
+            <span class="tag">CISA KEV</span>
+            <span class="tag">EPSS</span>
+            <span class="tag">Shodan</span>
+            <span class="tag">Threat Intel</span>
+          </div>
+        </div>
+
+        <div class="glass-panel exp-card" id="exp1" style="display:none;">
+          <div class="exp-header">
+            <div>
+              <h3>Security & Infrastructure</h3>
+              <div class="exp-company">Linebarger Goggan Blair & Sampson</div>
+            </div>
+            <span class="exp-date">Summer 2025</span>
+          </div>
+          <p class="exp-desc">Developed and deployed security infrastructure and vulnerability assessment systems for enterprise environment.</p>
+          <ul class="exp-list">
+            <li>PowerShell/Python hardening automation across 500+ endpoints</li>
+            <li>Deployed Cortex XDR for automated incident response</li>
+            <li>Network security assessments and remediation guidance</li>
+            <li>Security baseline enforcement and compliance reporting</li>
+            <li>Collaborated with IT ops on security policy development</li>
+          </ul>
+          <div class="tech-tags">
+            <span class="tag">PowerShell</span>
+            <span class="tag">Python</span>
+            <span class="tag">Cortex XDR</span>
+            <span class="tag">Security Ops</span>
+            <span class="tag">Compliance</span>
+          </div>
+        </div>
+
+        <div class="glass-panel exp-card" id="exp2" style="display:none;">
+          <div class="exp-header">
+            <div>
+              <h3>IT Security & Network Support</h3>
+              <div class="exp-company">Northeast Independent School District</div>
+            </div>
+            <span class="exp-date">2024 – 2025</span>
+          </div>
+          <p class="exp-desc">IT security and infrastructure support for district-wide systems serving 40,000+ students and staff.</p>
+          <ul class="exp-list">
+            <li>Network security policies and firewall configurations</li>
+            <li>Security training and awareness sessions for staff</li>
+            <li>Identity and access management system deployment</li>
+            <li>Incident response and malware remediation</li>
+            <li>Education technology and compliance initiatives</li>
+          </ul>
+          <div class="tech-tags">
+            <span class="tag">Network Security</span>
+            <span class="tag">IAM</span>
+            <span class="tag">Incident Response</span>
+            <span class="tag">K-12</span>
+            <span class="tag">Compliance</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="reveal">
+      <div class="section-label">Projects</div>
+      <h2 class="section-title glass-text">What I've built</h2>
+      <div class="section-desc">Security platforms with interactive demos and homelab infrastructure.</div>
+
+      <div class="projects-grid">
+        <a href="/projects.html" class="glass-panel project-card has-demo">
+          <div class="card-top">
+            <div class="card-icon red">C</div>
+            <div class="card-info">
+              <h3>CERBERUS</h3>
+              <span class="meta">Vulnerability Intelligence</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <p>CISA KEV + EPSS + Shodan + MITRE ATT&CK. Triages 249 CVEs down to 4 actionable priorities with ownership tracking.</p>
+          </div>
+          <div class="card-footer">
+            <span class="tag">Python</span>
+            <span class="tag">CISA KEV</span>
+            <span class="tag">EPSS</span>
+            <span class="tag">Shodan</span>
+          </div>
+        </a>
+
+        <a href="/projects.html" class="glass-panel project-card has-demo">
+          <div class="card-top">
+            <div class="card-icon blue">A</div>
+            <div class="card-info">
+              <h3>ACER</h3>
+              <span class="meta">Credential Exposure Response</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <p>Dark-web credential detection via Recorded Future. Human-in-the-loop password resets through Microsoft Entra within minutes.</p>
+          </div>
+          <div class="card-footer">
+            <span class="tag">Python</span>
+            <span class="tag">Recorded Future</span>
+            <span class="tag">Entra</span>
+            <span class="tag">Identity</span>
+          </div>
+        </a>
+
+        <a href="/projects.html" class="glass-panel project-card has-demo">
+          <div class="card-top">
+            <div class="card-icon green">T</div>
+            <div class="card-info">
+              <h3>ATLAS</h3>
+              <span class="meta">Ticket Routing</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <p>Intelligent ticket classification, leveling, and assignment based on risk scoring and analyst availability.</p>
+          </div>
+          <div class="card-footer">
+            <span class="tag">Python</span>
+            <span class="tag">Risk Scoring</span>
+            <span class="tag">Automation</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Homelab -->
+      <div style="margin-top: 4rem;">
+        <div class="section-label">Homelab</div>
+        <h2 class="section-title glass-text" style="font-size: clamp(1.3rem, 3vw, 1.75rem);">Infrastructure</h2>
+        <div class="section-desc">Self-hosted services and networked systems.</div>
+
+        <div class="projects-grid">
+          <div class="glass-panel project-card">
+            <div class="card-top">
+              <div class="card-icon purple">N</div>
+              <div class="card-info">
+                <h3>Network Dashboard</h3>
+                <span class="meta">Remote Access</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <p>Tailscale VPN + Apache Guacamole for secure browser-based terminal and desktop sessions across the homelab.</p>
+            </div>
+            <div class="card-footer">
+              <span class="tag">Tailscale</span>
+              <span class="tag">Guacamole</span>
+              <span class="tag">VPN</span>
+            </div>
+          </div>
+
+          <div class="glass-panel project-card">
+            <div class="card-top">
+              <div class="card-icon orange">M</div>
+              <div class="card-info">
+                <h3>Media Stack</h3>
+                <span class="meta">Streaming</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <p>Self-hosted media with Prowlarr, Radarr, and Sonarr. Full control over library without cloud subscriptions.</p>
+            </div>
+            <div class="card-footer">
+              <span class="tag">Prowlarr</span>
+              <span class="tag">Radarr</span>
+              <span class="tag">Sonarr</span>
+            </div>
+          </div>
+
+          <div class="glass-panel project-card">
+            <div class="card-top">
+              <div class="card-icon teal">P</div>
+              <div class="card-info">
+                <h3>Photo Server</h3>
+                <span class="meta">Storage Intelligence</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <p>Immich on legacy NAS + <a href="https://github.com/ahaanwanvari/shelf" target="_blank">Shelf</a>, a custom storage analysis platform.</p>
+            </div>
+            <div class="card-footer">
+              <span class="tag">Immich</span>
+              <span class="tag">Shelf</span>
+              <span class="tag">NAS</span>
+              <span class="tag">Python</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="reveal">
+      <div class="section-label">Contact</div>
+      <h2 class="section-title glass-text">Let's connect</h2>
+      <div class="section-desc">Reach out — I'd love to hear from you.</div>
+
+      <div class="contact-grid">
+        <a href="mailto:ahaanwanvari@gmail.com" class="glass-panel contact-card">
+          <span class="icon">&#9993;</span>
+          <h3>Email</h3>
+          <div class="value">ahaanwanvari@gmail.com</div>
+        </a>
+        <a href="https://www.linkedin.com/in/ahaan-wanvari-b9b75a265/" target="_blank" class="glass-panel contact-card">
+          <span class="icon">&#128188;</span>
+          <h3>LinkedIn</h3>
+          <div class="value">ahaan-wanvari</div>
+        </a>
+        <a href="https://github.com/ahaanwanvari" target="_blank" class="glass-panel contact-card">
+          <span class="icon">&#128187;</span>
+          <h3>GitHub</h3>
+          <div class="value">ahaanwanvari</div>
+        </a>
+        <a href="tel:210-330-4260" class="glass-panel contact-card">
+          <span class="icon">&#128222;</span>
+          <h3>Phone</h3>
+          <div class="value">(210) 330-4260</div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Ahaan Wanvari</p>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.06, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Active nav on scroll
+    window.addEventListener('scroll', () => {
+      let cur = '';
+      document.querySelectorAll('section[id]').forEach(s => {
+        if (scrollY >= s.offsetTop - 200) cur = s.id;
+      });
+      document.querySelectorAll('.nav-links a').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === `#${cur}`);
+      });
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const href = a.getAttribute('href');
+        if (!href || href === '#') return;
+        e.preventDefault();
+        document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Experience carousel
+    let cur = 0;
+    const total = 3;
+    function showExp(i) {
+      cur = i;
+      const dots = document.querySelectorAll('.carousel-dot');
+      for (let j = 0; j < total; j++) {
+        document.getElementById(`exp${j}`).style.display = j === i ? 'block' : 'none';
+        dots[j].classList.toggle('active', j === i);
+      }
+    }
+    function nextExp() { showExp((cur + 1) % total); }
+    function prevExp() { showExp((cur - 1 + total) % total); }
+    function goExp(i) { showExp(i); }
+    showExp(0);
+  </script>
+</body>
+</html>

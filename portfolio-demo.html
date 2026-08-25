@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACER Demo</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html,body{height:100%;overflow:hidden;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#141210;color:#e8e0d4;}
+        .wrap{height:100%;display:flex;flex-direction:column;padding:10px;}
+        .hdr{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#1e1a16;border:1px solid #2a2520;border-radius:6px;margin-bottom:8px;flex-shrink:0;}
+        .hdr h1{font-size:.85rem;font-weight:700;}
+        .hdr-r{display:flex;align-items:center;gap:8px;font-size:.6rem;color:#7a7068;font-family:monospace;}
+        .dot{width:6px;height:6px;border-radius:50%;background:#5ecd78;}
+        .dot.polling{background:#e8b830;}
+        .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;flex-shrink:0;}
+        .st{background:#1e1a16;border:1px solid #2a2520;border-radius:4px;padding:6px;text-align:center;}
+        .st-v{font-family:monospace;font-size:1rem;font-weight:700;}
+        .st-l{font-size:.5rem;color:#7a7068;text-transform:uppercase;letter-spacing:.5px;margin-top:1px;}
+        .queue-sec{flex-shrink:0;margin-bottom:8px;}
+        .sec-title{font-size:.65rem;font-weight:700;color:#7a7068;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+        .queue{min-height:24px;}
+        .qi{background:#1e1a16;border:1px solid #2a2520;border-left:3px solid #e8b830;border-radius:4px;padding:8px 10px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;}
+        .qi.show{opacity:1;transform:translateY(0);}
+        .qi.approved{border-left-color:#5ecd78;}
+        .qi.denied{border-left-color:#f07070;}
+        .qi-info .qi-name{font-size:.72rem;font-weight:600;}
+        .qi-info .qi-meta{font-size:.6rem;color:#7a7068;margin-top:2px;}
+        .qi-info .qi-meta span{margin-right:10px;}
+        .qi-btns{display:flex;gap:4px;}
+        .qi-btns button{padding:4px 8px;border-radius:3px;border:none;font-size:.58rem;font-weight:600;color:#fff;cursor:default;}
+        .qi-btns .ba{background:#5ecd78;}
+        .qi-btns .bd{background:#f07070;}
+        .qi-result{font-size:.6rem;font-weight:600;}
+        .tl-sec{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;}
+        .tl{flex:1;overflow:hidden;background:#1a1610;border:1px solid #2a2520;border-radius:4px;padding:8px;}
+        .te{padding:5px 8px;margin-bottom:4px;border-radius:3px;font-size:.62rem;opacity:0;transform:translateY(4px);transition:opacity .3s,transform .3s;display:flex;align-items:center;gap:6px;}
+        .te.show{opacity:1;transform:translateY(0);}
+        .te .icon{flex-shrink:0;}
+        .te .lbl{font-weight:600;}
+        .te .det{color:#7a7068;margin-left:auto;font-family:monospace;font-size:.55rem;}
+        .te.green{background:#1a2e1f;} .te.green .lbl{color:#5ecd78;}
+        .te.amber{background:#2a2210;} .te.amber .lbl{color:#e8b830;}
+        .te.red{background:#2e1a1a;} .te.red .lbl{color:#f07070;}
+        .te.blue{background:#1a2230;} .te.blue .lbl{color:#70b0f0;}
+        .te.grey{background:#1e1a16;} .te.grey .lbl{color:#7a7068;}
+        .empty{color:#5a5550;font-size:.6rem;font-style:italic;padding:4px;}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="hdr">
+        <h1>ACER</h1>
+        <div class="hdr-r"><div class="dot" id="dot"></div><span id="status">Idle</span></div>
+    </div>
+    <div class="stats">
+        <div class="st"><div class="st-v" style="color:#e8e0d4" id="s0">0</div><div class="st-l">Detected</div></div>
+        <div class="st"><div class="st-v" style="color:#e8b830" id="s1">0</div><div class="st-l">Pending</div></div>
+        <div class="st"><div class="st-v" style="color:#5ecd78" id="s2">0</div><div class="st-l">Reset</div></div>
+        <div class="st"><div class="st-v" style="color:#f07070" id="s3">0</div><div class="st-l">Denied</div></div>
+    </div>
+    <div class="queue-sec">
+        <div class="sec-title">Pending Approvals</div>
+        <div class="queue" id="queue"><div class="empty" id="emptyQ">No exposures pending.</div></div>
+    </div>
+    <div class="tl-sec">
+        <div class="sec-title">Event Timeline</div>
+        <div class="tl" id="tl"></div>
+    </div>
+</div>
+<script>
+const dot=document.getElementById('dot'),status=document.getElementById('status'),queue=document.getElementById('queue'),tl=document.getElementById('tl'),emptyQ=document.getElementById('emptyQ');
+const s=[0,0,0,0];
+function up(){for(let i=0;i<4;i++)document.getElementById('s'+i).textContent=s[i];}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function setPoll(on){if(on){dot.classList.add('polling');status.textContent='Polling...';}else{dot.classList.remove('polling');status.textContent='Idle';}}
+
+function addEvent(icon,label,color,detail){
+    const d=document.createElement('div');d.className='te '+color;
+    d.innerHTML=`<span class="icon">${icon}</span><span class="lbl">${label}</span><span class="det">${detail}</span>`;
+    tl.prepend(d);setTimeout(()=>d.classList.add('show'),30);
+    if(tl.children.length>12)tl.removeChild(tl.lastChild);
+}
+
+function addQueueItem(id,name,email,type,risk){
+    emptyQ.style.display='none';
+    const d=document.createElement('div');d.className='qi';d.id='qi-'+id;
+    d.innerHTML=`<div class="qi-info"><div class="qi-name">${name}</div><div class="qi-meta"><span>${email}</span><span>${type}</span><span>Risk: ${risk}</span></div></div><div class="qi-btns"><button class="ba">Approve</button><button class="bd">Deny</button></div>`;
+    queue.appendChild(d);setTimeout(()=>d.classList.add('show'),30);
+}
+
+function resolveItem(id,approved){
+    const el=document.getElementById('qi-'+id);
+    if(!el)return;
+    el.classList.add(approved?'approved':'denied');
+    el.querySelector('.qi-btns').innerHTML=`<span class="qi-result" style="color:${approved?'#5ecd78':'#f07070'}">${approved?'✓ Reset Executed':'✗ Denied'}</span>`;
+}
+
+function removeItem(id){const el=document.getElementById('qi-'+id);if(el)el.remove();}
+
+const USERS=[
+    {id:0,n:"A. Chen",e:"a.chen@acme-corp.io",t:"combo",src:"DarkMarket_2026",risk:87},
+    {id:1,n:"J. Lee",e:"j.lee@acme-corp.io",t:"breach",src:"MegaDump_v4",risk:92},
+    {id:2,n:"S. Rivera",e:"s.rivera@acme-corp.io",t:"paste",src:"Paste_Jul26",risk:71},
+];
+
+async function cycle(){
+    s.fill(0);up();queue.innerHTML='';emptyQ.style.display='';queue.appendChild(emptyQ);tl.innerHTML='';
+
+    addEvent('📡','System ready','grey','auto-poll enabled');
+    await sleep(2500);
+
+    // Poll
+    setPoll(true);
+    addEvent('🔍','Polling RF Identity API...','grey','acme-corp.io');
+    await sleep(2200);
+    setPoll(false);
+    addEvent('⚠️','3 exposures found','amber','credential leak detected');
+    s[0]=3;up();
+    await sleep(1200);
+
+    // Queue items
+    for(const u of USERS){
+        addQueueItem(u.id,u.n,u.e,u.t,u.risk);
+        addEvent('⏳','Queued for approval','amber',u.e);
+        s[1]++;up();
+        await sleep(900);
+    }
+    await sleep(2000);
+
+    // Approve first
+    resolveItem(0,true);
+    s[1]--;s[2]++;up();
+    addEvent('🔄','Password reset executed','green',USERS[0].e);
+    await sleep(2200);
+
+    // Approve second
+    resolveItem(1,true);
+    s[1]--;s[2]++;up();
+    addEvent('🔄','Password reset executed','green',USERS[1].e);
+    await sleep(2200);
+
+    // Deny third
+    resolveItem(2,false);
+    s[1]--;s[3]++;up();
+    addEvent('🚫','Denied — no action','red',USERS[2].e);
+    await sleep(1800);
+
+    // Notifications
+    addEvent('📧','Notification sent','blue',USERS[0].e);
+    await sleep(700);
+    addEvent('📧','Notification sent','blue',USERS[1].e);
+    await sleep(700);
+    addEvent('📧','SOC team notified','blue','security-team');
+    await sleep(2500);
+
+    addEvent('✅','Cycle complete','green','2 resets, 1 denied');
+    await sleep(4000);
+
+    // Fade out queue items
+    removeItem(0);removeItem(1);removeItem(2);
+    await sleep(1000);
+}
+
+async function loop(){while(true)await cycle();}
+loop();
+</script>
+</body>
+</html>

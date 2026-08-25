@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CERBERUS Demo</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        html,body{height:100%;overflow:hidden;}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#141210;color:#e8e0d4;}
+        .wrap{height:100%;display:flex;flex-direction:column;padding:10px;}
+        .hdr{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#1e1a16;border:1px solid #2a2520;border-radius:6px;margin-bottom:8px;flex-shrink:0;}
+        .hdr h1{font-size:.85rem;font-weight:700;letter-spacing:.08em;}
+        .hdr-r{display:flex;align-items:center;gap:8px;font-size:.6rem;color:#7a7068;font-family:monospace;}
+        .dot{width:6px;height:6px;border-radius:50%;background:#5ecd78;}
+        .dot.scanning{background:#e8b830;}
+        .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px;flex-shrink:0;}
+        .st{background:#1e1a16;border:1px solid #2a2520;border-radius:4px;padding:6px;text-align:center;}
+        .st-v{font-family:monospace;font-size:1rem;font-weight:700;}
+        .st-l{font-size:.5rem;color:#7a7068;text-transform:uppercase;letter-spacing:.5px;margin-top:1px;}
+        .board-sec{flex-shrink:0;margin-bottom:8px;}
+        .sec-title{font-size:.65rem;font-weight:700;color:#7a7068;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+        .board{min-height:24px;}
+        .ai{background:#1e1a16;border:1px solid #2a2520;border-left:3px solid #7a7068;border-radius:4px;padding:8px 10px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s;}
+        .ai.show{opacity:1;transform:translateY(0);}
+        .ai.elevated{border-left-color:#e8b830;}
+        .ai.standard{border-left-color:#70b0f0;}
+        .ai.selected{border-color:#e8b830;background:#22201a;}
+        .ai-info .ai-name{font-size:.72rem;font-weight:600;}
+        .ai-info .ai-meta{font-size:.6rem;color:#7a7068;margin-top:2px;}
+        .ai-info .ai-meta span{margin-right:10px;}
+        .ai-score{font-family:monospace;font-size:.9rem;font-weight:700;color:#e8e0d4;}
+        .ai-tier{font-size:.5rem;color:#7a7068;text-transform:uppercase;text-align:right;}
+        .tl-sec{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;}
+        .tl{flex:1;overflow:hidden;background:#1a1610;border:1px solid #2a2520;border-radius:4px;padding:8px;}
+        .te{padding:5px 8px;margin-bottom:4px;border-radius:3px;font-size:.62rem;opacity:0;transform:translateY(4px);transition:opacity .3s,transform .3s;display:flex;align-items:center;gap:6px;}
+        .te.show{opacity:1;transform:translateY(0);}
+        .te .icon{flex-shrink:0;}
+        .te .lbl{font-weight:600;}
+        .te .det{color:#7a7068;margin-left:auto;font-family:monospace;font-size:.55rem;}
+        .te.green{background:#1a2e1f;} .te.green .lbl{color:#5ecd78;}
+        .te.amber{background:#2a2210;} .te.amber .lbl{color:#e8b830;}
+        .te.red{background:#2e1a1a;} .te.red .lbl{color:#f07070;}
+        .te.blue{background:#1a2230;} .te.blue .lbl{color:#70b0f0;}
+        .te.purple{background:#221a2e;} .te.purple .lbl{color:#b08cf0;}
+        .te.grey{background:#1e1a16;} .te.grey .lbl{color:#7a7068;}
+        .empty{color:#5a5550;font-size:.6rem;font-style:italic;padding:4px;}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="hdr">
+        <h1>CERBERUS</h1>
+        <div class="hdr-r"><div class="dot" id="dot"></div><span id="status">Idle</span></div>
+    </div>
+    <div class="stats">
+        <div class="st"><div class="st-v" style="color:#e8b830" id="s0">0</div><div class="st-l">Elevated</div></div>
+        <div class="st"><div class="st-v" style="color:#f07070" id="s1">0</div><div class="st-l">KEV</div></div>
+        <div class="st"><div class="st-v" style="color:#70b0f0" id="s2">0</div><div class="st-l">Actions</div></div>
+        <div class="st"><div class="st-v" style="color:#e8e0d4" id="s3">0</div><div class="st-l">CVEs</div></div>
+        <div class="st"><div class="st-v" style="color:#5ecd78" id="s4">0</div><div class="st-l">Hosts</div></div>
+    </div>
+    <div class="board-sec">
+        <div class="sec-title">Triage Board</div>
+        <div class="board" id="board"><div class="empty" id="emptyB">Awaiting scan...</div></div>
+    </div>
+    <div class="tl-sec">
+        <div class="sec-title">Event Timeline</div>
+        <div class="tl" id="tl"></div>
+    </div>
+</div>
+<script>
+const dot=document.getElementById('dot'),status=document.getElementById('status'),board=document.getElementById('board'),tl=document.getElementById('tl'),emptyB=document.getElementById('emptyB');
+function setStat(i,v){document.getElementById('s'+i).textContent=v;}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function setScan(on){if(on){dot.classList.add('scanning');status.textContent='Scanning...';}else{dot.classList.remove('scanning');status.textContent='Ready';}}
+
+function addEvent(icon,label,color,detail){
+    const d=document.createElement('div');d.className='te '+color;
+    d.innerHTML=`<span class="icon">${icon}</span><span class="lbl">${label}</span><span class="det">${detail}</span>`;
+    tl.prepend(d);setTimeout(()=>d.classList.add('show'),30);
+    if(tl.children.length>14)tl.removeChild(tl.lastChild);
+}
+
+const ACTIONS=[
+    {id:0,n:"Apache httpd",score:"55.9",tier:"ELEVATED",cls:"elevated",hosts:35,cves:154,kev:3,meta:"KEV+ransomware \u00b7 EPSS 100% \u00b7 1 public"},
+    {id:1,n:"OpenSSH",score:"44.3",tier:"ELEVATED",cls:"elevated",hosts:39,cves:70,kev:0,meta:"EPSS 100% \u00b7 3 public \u00b7 remote_access crit 90"},
+    {id:2,n:"MongoDB",score:"49.7",tier:"ELEVATED",cls:"elevated",hosts:306,cves:21,kev:1,meta:"1 KEV \u00b7 databases crit 70 \u00b7 no public hosts"},
+    {id:3,n:"jQuery",score:"32.8",tier:"STANDARD",cls:"standard",hosts:13,cves:4,kev:1,meta:"1 KEV \u00b7 EPSS 99% \u00b7 1 public"},
+];
+
+function addAction(a){
+    emptyB.style.display='none';
+    const d=document.createElement('div');d.className='ai '+a.cls;d.id='ai-'+a.id;
+    d.innerHTML=`<div class="ai-info"><div class="ai-name">Patch ${a.n} on ${a.hosts} hosts</div><div class="ai-meta"><span>${a.meta}</span></div></div><div><div class="ai-score">${a.score}</div><div class="ai-tier">${a.tier}</div></div>`;
+    board.appendChild(d);setTimeout(()=>d.classList.add('show'),30);
+}
+
+function selectAction(id){
+    const el=document.getElementById('ai-'+id);if(el)el.classList.add('selected');
+}
+
+const HOSTS=["web-prod-01.acme-corp.io","10.40.12.88","cdn-edge-03.acme-corp.io","app-staging.internal.io"];
+
+async function cycle(){
+    // Reset
+    for(let i=0;i<5;i++)setStat(i,0);
+    board.innerHTML='';emptyB.style.display='';board.appendChild(emptyB);tl.innerHTML='';
+    status.textContent='Idle';
+
+    addEvent('\u{1F4E1}','System ready','grey','auto-refresh enabled');
+    await sleep(2000);
+
+    // Scan
+    setScan(true);
+    addEvent('\u{1F50D}','Scanning NVD + CISA KEV','blue','90-day window');
+    await sleep(1500);
+    addEvent('\u{1F4E1}','Syncing RF ASI project','purple','acme-corp.io');
+    await sleep(1500);
+    addEvent('\u{1F50E}','Shodan host search','blue','vuln:CVE scope verified');
+    await sleep(1200);
+    setScan(false);
+    addEvent('\u2705','Scan complete','green','26 CVEs \u00b7 875 observations');
+    setStat(3,249);setStat(4,405);
+    await sleep(1200);
+
+    // Collapse
+    addEvent('\u{1F4CA}','Collapsing 249 CVEs \u2192 4 actions','amber','74:1 reduction');
+    setStat(0,3);setStat(1,5);setStat(2,4);
+    await sleep(1000);
+
+    // Show actions
+    for(const a of ACTIONS){
+        addAction(a);
+        await sleep(600);
+    }
+    await sleep(1800);
+
+    // Prioritize
+    addEvent('\u26A0\uFE0F','Apache ranks #1','amber','KEV+ransomware \u00b7 internet-facing');
+    selectAction(0);
+    await sleep(2200);
+
+    // Dossier
+    addEvent('\u{1F4C2}','Dossier opened','blue','Apache httpd \u00b7 35 assets');
+    await sleep(1200);
+    addEvent('\u{1F513}','Hostnames revealed','amber','actor: J. Martinez \u00b7 35 hosts');
+    await sleep(1200);
+
+    // Ownership
+    for(let i=0;i<3;i++){
+        addEvent('\u2705','Ownership confirmed','green',HOSTS[i]+' \u2192 ACM-7742');
+        await sleep(800);
+    }
+    addEvent('\u274C','Not ours','red',HOSTS[3]+' \u2192 removed');
+    await sleep(1500);
+
+    // Assign
+    addEvent('\u{1F4DD}','Bulk assign: 154 CVEs','blue','INVESTIGATING \u00b7 Platform Eng');
+    await sleep(1200);
+    addEvent('\u{1F4E4}','Ticket exported','green','cerberus-apache-httpd.md');
+    await sleep(1500);
+
+    // Delta
+    addEvent('\u{1F4C8}','Delta detected','amber','+2 new hosts since last snapshot');
+    await sleep(1500);
+
+    addEvent('\u2705','Triage cycle complete','green','1 action resolved \u00b7 3 owned');
+    await sleep(4000);
+}
+
+async function loop(){while(true)await cycle();}
+loop();
+</script>
+</body>
+</html>
