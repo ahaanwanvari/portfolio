@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cybersecurity Qualifications — Ahaan Wanvari</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #06060f;
+      --glass: rgba(255, 255, 255, 0.04);
+      --glass-md: rgba(255, 255, 255, 0.06);
+      --glass-strong: rgba(255, 255, 255, 0.09);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-border-hover: rgba(255, 255, 255, 0.2);
+      --glass-shine: rgba(255, 255, 255, 0.18);
+      --accent: #8b5cf6;
+      --accent-blue: #6366f1;
+      --accent-cyan: #22d3ee;
+      --accent-glow: rgba(139, 92, 246, 0.25);
+      --text: #f8f8ff;
+      --text-secondary: #a5a5c0;
+      --text-muted: #5c5c7a;
+      --radius: 24px;
+      --radius-sm: 16px;
+      --radius-xs: 10px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== ANIMATED BACKGROUND MESH ===== */
+    .mesh-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .mesh-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.6;
+    }
+
+    .orb-1 {
+      width: 55vw; height: 55vw;
+      max-width: 700px; max-height: 700px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.35), transparent 60%);
+      top: -15%; right: -10%;
+      animation: orb-drift 22s ease-in-out infinite;
+    }
+
+    .orb-2 {
+      width: 45vw; height: 45vw;
+      max-width: 600px; max-height: 600px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.25), transparent 60%);
+      bottom: -10%; left: -10%;
+      animation: orb-drift 26s ease-in-out infinite reverse;
+    }
+
+    .orb-3 {
+      width: 30vw; height: 30vw;
+      max-width: 400px; max-height: 400px;
+      background: radial-gradient(circle, rgba(34, 211, 238, 0.18), transparent 60%);
+      top: 40%; left: 30%;
+      animation: orb-drift 18s ease-in-out infinite 2s;
+    }
+
+    @keyframes orb-drift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -20px) scale(1.05); }
+      66% { transform: translate(-20px, 15px) scale(0.95); }
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.025;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ===== LIQUID GLASS TEXT ===== */
+    .glass-text {
+      color: rgba(255, 255, 255, 0.08);
+      -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.4);
+      text-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.15),
+        0 -1px 0 rgba(0, 0, 0, 0.3),
+        0 0 4px rgba(255, 255, 255, 0.08),
+        0 4px 16px rgba(139, 92, 246, 0.08);
+      paint-order: stroke fill;
+    }
+
+    .glass-text-accent {
+      color: rgba(139, 92, 246, 0.12);
+      -webkit-text-stroke: 1.5px rgba(167, 139, 250, 0.55);
+      text-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.12),
+        0 -1px 0 rgba(0, 0, 0, 0.3),
+        0 0 6px rgba(139, 92, 246, 0.2),
+        0 4px 20px rgba(139, 92, 246, 0.12);
+      paint-order: stroke fill;
+    }
+
+    /* ===== GLASS PANELS ===== */
+    .glass-panel {
+      background: var(--glass);
+      backdrop-filter: blur(20px) saturate(1.3);
+      -webkit-backdrop-filter: blur(20px) saturate(1.3);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 var(--glass-shine),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+      transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .glass-panel:hover {
+      background: var(--glass-md);
+      border-color: var(--glass-border-hover);
+      box-shadow:
+        0 16px 48px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 var(--glass-shine),
+        0 0 30px var(--accent-glow);
+      transform: translateY(-3px);
+    }
+
+    /* ===== NAVIGATION PILL ===== */
+    .navbar {
+      position: fixed;
+      top: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: rgba(6, 6, 15, 0.4);
+      backdrop-filter: blur(30px) saturate(1.5);
+      -webkit-backdrop-filter: blur(30px) saturate(1.5);
+      border: 1px solid var(--glass-border);
+      border-radius: 100px;
+      padding: 0.6rem 1.75rem;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 var(--glass-shine);
+    }
+
+    .navbar-content {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 800;
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.1);
+      -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
+      text-shadow: 0 0 3px rgba(255, 255, 255, 0.15);
+      paint-order: stroke fill;
+      transition: all 0.2s;
+    }
+
+    .logo:hover {
+      -webkit-text-stroke-color: rgba(255, 255, 255, 0.7);
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: color 0.2s;
+      letter-spacing: 0.2px;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text);
+    }
+
+    /* ===== PAGE HEADER ===== */
+    .page-header {
+      padding: 8rem 2rem 3rem;
+      text-align: center;
+      max-width: 750px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-header h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      margin-bottom: 0.75rem;
+      line-height: 1.1;
+    }
+
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.75;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      padding: 0.4rem 1rem;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 100px;
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      backdrop-filter: blur(8px);
+    }
+
+    .page-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--accent-glow);
+    }
+
+    /* ===== SECTIONS ===== */
+    .content-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      padding: 0.35rem 0.9rem;
+      background: rgba(139, 92, 246, 0.08);
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      border-radius: 100px;
+      backdrop-filter: blur(8px);
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 0.75rem;
+      line-height: 1.15;
+    }
+
+    .section-desc {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      max-width: 550px;
+      margin-bottom: 2.5rem;
+      line-height: 1.75;
+    }
+
+    /* ===== CERTIFICATIONS ===== */
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .cert-card {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .cert-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .cert-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .cert-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 900;
+      flex-shrink: 0;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .cert-icon.security {
+      background: rgba(16, 185, 129, 0.18);
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .cert-icon.pentest {
+      background: rgba(239, 68, 68, 0.18);
+      color: #fca5a5;
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .cert-icon.network {
+      background: rgba(59, 130, 246, 0.18);
+      color: #93c5fd;
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .cert-info h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+    }
+
+    .cert-info .issuer {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .cert-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .cert-detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .cert-detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .cert-detail-row .label {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .cert-detail-row .value {
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .cert-image-placeholder {
+      width: 100%;
+      border-radius: var(--radius-xs);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.02);
+      overflow: hidden;
+    }
+
+    .cert-image-placeholder img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--radius-xs);
+    }
+
+    .verify-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .verify-link:hover {
+      color: #a78bfa;
+    }
+
+    /* ===== EXPERIENCE ===== */
+    .exp-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .exp-entry {
+      padding: 2rem;
+    }
+
+    .exp-entry:hover {
+      transform: translateY(-3px);
+    }
+
+    .exp-entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .exp-entry-header h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+
+    .exp-company-name {
+      color: var(--accent);
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .exp-date-badge {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: var(--glass-md);
+      padding: 0.3rem 0.75rem;
+      border-radius: 100px;
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(8px);
+      white-space: nowrap;
+    }
+
+    .exp-description {
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+    }
+
+    .exp-bullets {
+      list-style: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .exp-bullets li {
+      color: var(--text-secondary);
+      padding: 0.45rem 0 0.45rem 1.25rem;
+      position: relative;
+      font-size: 0.84rem;
+      line-height: 1.6;
+    }
+
+    .exp-bullets li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0.9rem;
+      width: 5px; height: 5px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--accent-glow);
+    }
+
+    .exp-bullets li strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .tag {
+      background: var(--glass-md);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      padding: 0.28rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    /* ===== PROJECTS ===== */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .project-card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .project-icon {
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      font-weight: 900;
+      flex-shrink: 0;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+
+    .project-card:hover .project-icon {
+      transform: scale(1.1);
+    }
+
+    .project-icon.cerberus { background: rgba(239, 68, 68, 0.18); color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
+    .project-icon.acer { background: rgba(59, 130, 246, 0.18); color: #93c5fd; border-color: rgba(59, 130, 246, 0.3); }
+    .project-icon.sage { background: rgba(16, 185, 129, 0.18); color: #6ee7b7; border-color: rgba(16, 185, 129, 0.3); }
+
+    .project-card-header .info h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+    }
+
+    .project-card-header .info .meta {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .project-card p {
+      color: var(--text-secondary);
+      font-size: 0.84rem;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+
+    .project-card .evidence-label {
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-card .evidence-text {
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      line-height: 1.6;
+      font-style: italic;
+      padding-left: 0.75rem;
+      border-left: 2px solid rgba(139, 92, 246, 0.3);
+    }
+
+    /* ===== TECHNICAL WRITING ===== */
+    .writing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .writing-card {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .writing-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .writing-card h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      margin-bottom: 0.5rem;
+    }
+
+    .writing-card .writing-date {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .writing-card p {
+      color: var(--text-secondary);
+      font-size: 0.84rem;
+      line-height: 1.7;
+      flex: 1;
+      margin-bottom: 1.25rem;
+    }
+
+    .writing-card .read-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .writing-card .read-link:hover {
+      color: #a78bfa;
+    }
+
+    .writing-card .read-link svg {
+      width: 14px; height: 14px;
+    }
+
+    .writing-placeholder {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-style: italic;
+    }
+
+    /* ===== COMPETITIONS ===== */
+    .competitions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .competition-card {
+      padding: 2rem;
+    }
+
+    .competition-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .competition-card h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      margin-bottom: 0.25rem;
+    }
+
+    .competition-card .comp-org {
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .competition-card .comp-detail {
+      color: var(--text-secondary);
+      font-size: 0.84rem;
+      line-height: 1.7;
+      margin-bottom: 0.75rem;
+    }
+
+    .competition-card .comp-achievement {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 100px;
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    /* ===== TECHNICAL SKILLS ===== */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .skill-category {
+      padding: 1.75rem;
+    }
+
+    .skill-category:hover {
+      transform: translateY(-2px);
+    }
+
+    .skill-category h3 {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .skill-tag {
+      background: var(--glass-md);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      padding: 0.35rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      transition: all 0.2s;
+    }
+
+    .skill-tag:hover {
+      background: var(--glass-strong);
+      border-color: var(--glass-border-hover);
+      color: var(--text);
+    }
+
+    /* ===== COMPETENCY EVIDENCE TABLE ===== */
+    .competency-section {
+      overflow-x: auto;
+    }
+
+    .competency-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--glass);
+      backdrop-filter: blur(20px) saturate(1.3);
+      -webkit-backdrop-filter: blur(20px) saturate(1.3);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 var(--glass-shine);
+    }
+
+    .competency-table thead th {
+      background: rgba(139, 92, 246, 0.06);
+      padding: 1rem 1.25rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      text-align: left;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .competency-table tbody tr {
+      transition: background 0.2s;
+    }
+
+    .competency-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .competency-table tbody td {
+      padding: 1rem 1.25rem;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+
+    .competency-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .competency-table .area-name {
+      color: var(--text);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .competency-table .evidence-sources {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .evidence-badge {
+      display: inline-flex;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .evidence-badge.cert {
+      background: rgba(16, 185, 129, 0.12);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .evidence-badge.project {
+      background: rgba(59, 130, 246, 0.12);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .evidence-badge.experience {
+      background: rgba(139, 92, 246, 0.12);
+      color: #c4b5fd;
+      border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .evidence-badge.competition {
+      background: rgba(245, 158, 11, 0.12);
+      color: #fcd34d;
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      border-top: 1px solid var(--glass-border);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover { color: var(--text); }
+
+    /* ===== SCROLL REVEAL ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .navbar { padding: 0.5rem 1.25rem; }
+      .navbar-content { gap: 1.25rem; }
+      .nav-links { gap: 1rem; }
+
+      .content-section { padding: 3rem 1.25rem; }
+      .page-header { padding: 7rem 1.5rem 2rem; }
+
+      .certs-grid,
+      .projects-grid,
+      .writing-grid,
+      .competitions-grid,
+      .skills-grid { grid-template-columns: 1fr; }
+
+      .competency-table { font-size: 0.75rem; }
+      .competency-table thead th,
+      .competency-table tbody td { padding: 0.75rem 0.9rem; }
+    }
+
+    @media (max-width: 480px) {
+      .navbar { border-radius: 16px; top: 0.5rem; left: 0.5rem; right: 0.5rem; transform: none; }
+      .nav-links { gap: 0.75rem; }
+      .nav-links a { font-size: 0.72rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Animated background -->
+  <div class="mesh-bg">
+    <div class="mesh-orb orb-1"></div>
+    <div class="mesh-orb orb-2"></div>
+    <div class="mesh-orb orb-3"></div>
+  </div>
+  <div class="noise"></div>
+
+  <!-- Navigation pill -->
+  <nav class="navbar">
+    <div class="navbar-content">
+      <a href="/" class="logo">ahaan</a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#about">About</a></li>
+        <li><a href="/#experience">Experience</a></li>
+        <li><a href="/projects.html">Demos</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="page-badge">Credit by Examination Portfolio</div>
+    <h1><span class="glass-text">Cybersecurity </span><span class="glass-text-accent">Qualifications</span></h1>
+    <p>Evidence of cybersecurity knowledge, professional experience, and technical competency submitted for Credit by Examination (CBE) consideration at UTSA. Each section provides verifiable evidence of applied skills and industry-recognized credentials.</p>
+  </header>
+
+  <main>
+    <!-- ===== CERTIFICATIONS ===== -->
+    <section class="content-section reveal" id="certifications">
+      <div class="section-label">Certifications</div>
+      <h2 class="section-title glass-text">Industry Credentials</h2>
+      <div class="section-desc">Active CompTIA certifications demonstrating validated knowledge in security operations, penetration testing, and networking.</div>
+
+      <div class="certs-grid">
+        <!-- CompTIA Security+ -->
+        <div class="glass-panel cert-card">
+          <div class="cert-header">
+            <div class="cert-icon security">S+</div>
+            <div class="cert-info">
+              <h3>CompTIA Security+</h3>
+              <span class="issuer">CompTIA</span>
+            </div>
+          </div>
+          <div class="cert-details">
+            <div class="cert-detail-row">
+              <span class="label">Certification</span>
+              <span class="value">CompTIA Security+ ce</span>
+            </div>
+            <div class="cert-detail-row">
+              <span class="label">Status</span>
+              <span class="value">Active</span>
+            </div>
+            <div class="cert-detail-row">
+              <span class="label">Active Date</span>
+              <span class="value">2025-04-23</span>
+            </div>
+            <div class="cert-detail-row">
+              <span class="label">Expiration</span>
+              <span class="value">2029-04-30</span>
+            </div>
+            <div class="cert-detail-row">
+              <span class="label">Domains</span>
+              <span class="value">Threats, Architecture, Operations, Governance</span>
+            </div>
+          </div>
+          <div class="cert-image-placeholder">
+            <img src="assets/certs/security.png" alt="CompTIA Security+ ce credential showing active status, active date 2025-04-23, expiration 2029-04-30">
+          </div>
+          <a href="https://www.certmetrics.com/comptia/public/verification.aspx" target="_blank" rel="noopener" class="verify-link">
+            Verify on CompTIA &rarr;
+          </a>
+        </div>
+
+        <!-- CompTIA PenTest+ -->
+        <div class="glass-panel cert-card">
+          <div class="cert-header">
+            <div class="cert-icon pentest">PT+</div>
+            <div class="cert-info">
+              <h3>CompTIA PenTest+</h3>
+              <span class="issuer">CompTIA</span>
+            </div>
+          </div>
+          <div class="cert-details">
+            <div class="cert-detail-row">
+              <span class="label">Certification</span>
+              <span class="value">CompTIA PenTest+ ce</span>
+            </div>
+            <div class="cert-detail-row">
+              <span class="label">Status</span>
+              <span class="value">Active</span>
+            </div>
+            <div class="cert-detail-row">
+              <span class="label">Active Date</span>
+              <span class="value">2026-04-30</span>
+            </div>
+            <div class="cert-detail-row">
+              <span class="label">Expiration</span>
+              <span class="value">2029-04-30</span>
+            </div>
+            <div class="cert-detail-row">
+              <span class="label">Domains</span>
+              <span class="value">Planning, Attacks, Reporting, Tools</span>
+            </div>
+          </div>
+          <div class="cert-image-placeholder">
+            <img src="assets/certs/pentest.png" alt="CompTIA PenTest+ ce credential showing active status, active date 2026-04-30, expiration 2029-04-30">
+          </div>
+          <a href="https://www.certmetrics.com/comptia/public/verification.aspx" target="_blank" rel="noopener" class="verify-link">
+            Verify on CompTIA &rarr;
+          </a>
+        </div>
+
+        <!-- CompTIA Network+ -->
+        <div class="glass-panel cert-card">
+          <div class="cert-header">
+            <div class="cert-icon network">N+</div>
+            <div class="cert-info">
+              <h3>CompTIA Network+</h3>
+              <span class="issuer">CompTIA</span>
+            </div>
+          </div>
+          <div class="cert-details">
+            <div class="cert-detail-row">
+              <span class="label">Certification</span>
+              <span class="value">CompTIA Network+ ce</span>
+            </div>
+            <div class="cert-detail-row">
+              <span class="label">Status</span>
+              <span class="value">Active</span>
+            </div>
+            <div class="cert-detail-row">
+              <span class="label">Active Date</span>
+              <span class="value">2024-05-03</span>
+            </div>
+            <div class="cert-detail-row">
+              <span class="label">Expiration</span>
+              <span class="value">2029-04-30</span>
+            </div>
+            <div class="cert-detail-row">
+              <span class="label">Domains</span>
+              <span class="value">Networking, Infrastructure, Security, Troubleshooting</span>
+            </div>
+          </div>
+          <div class="cert-image-placeholder">
+            <img src="assets/certs/network.png" alt="CompTIA Network+ ce credential showing active status, active date 2024-05-03, expiration 2029-04-30">
+          </div>
+          <a href="https://www.certmetrics.com/comptia/public/verification.aspx" target="_blank" rel="noopener" class="verify-link">
+            Verify on CompTIA &rarr;
+          </a>
+        </div>
+      </div>
+    </section>
+    <section class="content-section reveal" id="experience">
+      <div class="section-label">Professional Experience</div>
+      <h2 class="section-title glass-text">Cybersecurity Roles</h2>
+      <div class="section-desc">Enterprise security experience across vulnerability management, incident response, and security infrastructure.</div>
+
+      <div class="exp-timeline">
+        <!-- Rackspace -->
+        <div class="glass-panel exp-entry">
+          <div class="exp-entry-header">
+            <div>
+              <h3>Global Enterprise Security Intern</h3>
+              <div class="exp-company-name">Rackspace Technologies</div>
+            </div>
+            <span class="exp-date-badge">Jun 2026 – Present</span>
+          </div>
+          <p class="exp-description">Designing and building vulnerability intelligence and automated threat response platforms for the Global Enterprise Security team. Working directly with SOC analysts, Threat Intelligence, and Compliance teams on production security workflows.</p>
+          <ul class="exp-bullets">
+            <li><strong>CERBERUS</strong> — Built a vulnerability intelligence platform integrating CISA KEV, EPSS scoring, Shodan exposure data, and MITRE ATT&CK mapping. Triages hundreds of CVEs down to actionable priorities with ownership tracking.</li>
+            <li><strong>ACER</strong> — Developed automated credential exposure response system using Recorded Future dark-web intelligence and Microsoft Entra APIs for human-in-the-loop password resets.</li>
+            <li><strong>SAGE</strong> — Built a RAG-based compliance Q&A tool (Standards & Governance Engine) grounded in the GRC team's policy corpus with enforced contextual grounding, source provenance tracking, and a feedback loop hardened against prompt injection.</li>
+            <li>Implemented human-in-the-loop automation patterns balancing response speed with analyst oversight and control.</li>
+            <li>Collaborated cross-functionally with SOC, Threat Intelligence, and Compliance teams on platform requirements and integration.</li>
+          </ul>
+          <div class="tech-tags">
+            <span class="tag">Python</span>
+            <span class="tag">REST APIs</span>
+            <span class="tag">CISA KEV</span>
+            <span class="tag">EPSS</span>
+            <span class="tag">Shodan</span>
+            <span class="tag">Recorded Future</span>
+            <span class="tag">Microsoft Entra</span>
+            <span class="tag">MITRE ATT&CK</span>
+          </div>
+        </div>
+
+        <!-- Linebarger -->
+        <div class="glass-panel exp-entry">
+          <div class="exp-entry-header">
+            <div>
+              <h3>Information Technology Security Intern</h3>
+              <div class="exp-company-name">Linebarger Goggan Blair & Sampson</div>
+            </div>
+            <span class="exp-date-badge">Oct 2025 – Jun 2026</span>
+          </div>
+          <p class="exp-description">Security and infrastructure intern supporting endpoint security, incident response, and automation initiatives across enterprise systems.</p>
+          <ul class="exp-bullets">
+            <li>Investigated and remediated malware infections using Correx, supporting endpoint security and incident-response activities across enterprise systems</li>
+            <li>Developed an AI-assisted help-desk automation that streamlined technical support workflows and increased productivity by 26%</li>
+          </ul>
+          <div class="tech-tags">
+            <span class="tag">Correx</span>
+            <span class="tag">Incident Response</span>
+            <span class="tag">Endpoint Security</span>
+            <span class="tag">AI Automation</span>
+            <span class="tag">Help Desk</span>
+          </div>
+        </div>
+
+        <!-- NEISD -->
+        <div class="glass-panel exp-entry">
+          <div class="exp-entry-header">
+            <div>
+              <h3>Field / Technology Intern</h3>
+              <div class="exp-company-name">North East Independent School District Tech Services</div>
+            </div>
+            <span class="exp-date-badge">Summers 2024 – 2025</span>
+          </div>
+          <p class="exp-description">Field technology support across multiple school sites in one of San Antonio's largest districts.</p>
+          <ul class="exp-bullets">
+            <li>Installed, configured, and maintained computer hardware and peripheral devices across multiple school sites</li>
+            <li>Assisted in deploying network updates and troubleshooting connectivity issues, improving system reliability</li>
+          </ul>
+          <div class="tech-tags">
+            <span class="tag">Networking</span>
+            <span class="tag">Hardware</span>
+            <span class="tag">Troubleshooting</span>
+            <span class="tag">Infrastructure</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CYBERSECURITY PROJECTS ===== -->
+    <section class="content-section reveal" id="projects">
+      <div class="section-label">Projects</div>
+      <h2 class="section-title glass-text">Security Platforms</h2>
+      <div class="section-desc">Production security tools built during professional experience, each addressing specific enterprise security challenges.</div>
+
+      <div class="projects-grid">
+        <!-- CERBERUS -->
+        <div class="glass-panel project-card">
+          <div class="project-card-header">
+            <div class="project-icon cerberus">C</div>
+            <div class="info">
+              <h3>CERBERUS</h3>
+              <span class="meta">Vulnerability Intelligence Platform</span>
+            </div>
+          </div>
+          <p>Integrates CISA KEV catalog, EPSS scoring, Shodan internet exposure data, and MITRE ATT&CK mapping to prioritize vulnerability remediation. Reduces analyst triage workload by collapsing hundreds of CVEs into a small number of high-confidence, actionable priorities with ownership tracking and ticket generation.</p>
+          <div class="evidence-label">Competency Evidence</div>
+          <div class="evidence-text">Demonstrates applied knowledge of vulnerability management frameworks, threat intelligence integration, risk-based prioritization, and security automation with Python.</div>
+          <div class="tech-tags" style="margin-top: 1rem;">
+            <span class="tag">Python</span>
+            <span class="tag">CISA KEV</span>
+            <span class="tag">EPSS</span>
+            <span class="tag">Shodan API</span>
+            <span class="tag">MITRE ATT&CK</span>
+            <span class="tag">NVD</span>
+          </div>
+        </div>
+
+        <!-- ACER -->
+        <div class="glass-panel project-card">
+          <div class="project-card-header">
+            <div class="project-icon acer">A</div>
+            <div class="info">
+              <h3>ACER</h3>
+              <span class="meta">Automated Credential Exposure Response</span>
+            </div>
+          </div>
+          <p>Monitors dark-web intelligence feeds via Recorded Future for leaked organizational credentials. Implements human-in-the-loop approval workflows that trigger Microsoft Entra password reset APIs within minutes of detection, converting what was previously a 48-hour incident response process into a 15-minute automated workflow.</p>
+          <div class="evidence-label">Competency Evidence</div>
+          <div class="evidence-text">Demonstrates applied knowledge of identity and access management, dark-web threat intelligence, incident response automation, and secure API integration patterns.</div>
+          <div class="tech-tags" style="margin-top: 1rem;">
+            <span class="tag">Python</span>
+            <span class="tag">Recorded Future API</span>
+            <span class="tag">Microsoft Entra</span>
+            <span class="tag">Identity Security</span>
+            <span class="tag">Incident Response</span>
+          </div>
+        </div>
+
+        <!-- SAGE -->
+        <div class="glass-panel project-card">
+          <div class="project-card-header">
+            <div class="project-icon sage">S</div>
+            <div class="info">
+              <h3>SAGE</h3>
+              <span class="meta">Standards & Governance Engine</span>
+            </div>
+          </div>
+          <p>A RAG-based compliance Q&A tool grounded in the GRC team's policy corpus. Features enforced contextual grounding, source provenance tracking, and a feedback loop hardened against prompt injection. Enables security and compliance staff to quickly query organizational policies with verifiable, sourced answers.</p>
+          <div class="evidence-label">Competency Evidence</div>
+          <div class="evidence-text">Demonstrates applied knowledge of security governance, GRC frameworks, retrieval-augmented generation, prompt injection mitigation, and building AI-assisted security tooling for enterprise compliance workflows.</div>
+          <div class="tech-tags" style="margin-top: 1rem;">
+            <span class="tag">Python</span>
+            <span class="tag">RAG</span>
+            <span class="tag">GRC</span>
+            <span class="tag">Compliance</span>
+            <span class="tag">Prompt Security</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TECHNICAL WRITING ===== -->
+    <section class="content-section reveal" id="writing">
+      <div class="section-label">Technical Writing</div>
+      <h2 class="section-title glass-text">Security Write-ups</h2>
+      <div class="section-desc">Cybersecurity analysis and technical documentation demonstrating communication of complex security concepts.</div>
+
+      <div class="writing-grid">
+        <div class="glass-panel writing-card">
+          <h3>Sample Write-up 1</h3>
+          <div class="writing-date">Date TBD</div>
+          <p>Technical write-up demonstrating security analysis, methodology documentation, and clear communication of findings and recommendations.</p>
+          <span class="writing-placeholder">Full write-up will be linked here once provided</span>
+        </div>
+
+        <div class="glass-panel writing-card">
+          <h3>Sample Write-up 2</h3>
+          <div class="writing-date">Date TBD</div>
+          <p>Security research or penetration testing report showcasing structured methodology, evidence documentation, and professional reporting standards.</p>
+          <span class="writing-placeholder">Full write-up will be linked here once provided</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== COMPETITIONS ===== -->
+    <section class="content-section reveal" id="competitions">
+      <div class="section-label">Competitions</div>
+      <h2 class="section-title glass-text">CTF & Team Events</h2>
+      <div class="section-desc">Capture The Flag competitions and cybersecurity team experiences demonstrating applied skills under pressure.</div>
+
+      <div class="competitions-grid">
+        <div class="glass-panel competition-card">
+          <h3>Rowdy CTF</h3>
+          <div class="comp-org">UTSA Collegiate Cyber Competition</div>
+          <p class="comp-detail">Competed in UTSA's Rowdy CTF event covering web exploitation, cryptography, reverse engineering, forensics, and miscellaneous challenges against collegiate teams.</p>
+          <span class="comp-achievement">3rd Place</span>
+        </div>
+
+        <div class="glass-panel competition-card">
+          <h3>National Cyber League (NCL)</h3>
+          <div class="comp-org">Cyber Skyline</div>
+          <p class="comp-detail">Competed in individual and team games covering cryptography, log analysis, network traffic analysis, open source intelligence, password cracking, scanning/reconnaissance, web application exploitation, and forensics.</p>
+          <span class="comp-achievement">3rd out of 3,600 Teams</span>
+        </div>
+
+        <div class="glass-panel competition-card">
+          <h3>CyberPatriots</h3>
+          <div class="comp-org">Air & Space Forces Association</div>
+          <p class="comp-detail">Competed in the national youth cyber defense competition focused on hardening virtual operating systems, securing network infrastructure, and defending against simulated cyber threats.</p>
+          <span class="comp-achievement">Phoenix Award — Best Rookie Team</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TECHNICAL SKILLS ===== -->
+    <section class="content-section reveal" id="skills">
+      <div class="section-label">Technical Skills</div>
+      <h2 class="section-title glass-text">Capabilities</h2>
+      <div class="section-desc">Technical skills demonstrated through certifications, professional experience, and project work.</div>
+
+      <div class="skills-grid">
+        <div class="glass-panel skill-category">
+          <h3>Security Operations</h3>
+          <div class="skill-list">
+            <span class="skill-tag">Vulnerability Management</span>
+            <span class="skill-tag">Incident Response</span>
+            <span class="skill-tag">Threat Intelligence</span>
+            <span class="skill-tag">SIEM/SOC Operations</span>
+            <span class="skill-tag">Endpoint Detection</span>
+            <span class="skill-tag">Security Automation</span>
+          </div>
+        </div>
+
+        <div class="glass-panel skill-category">
+          <h3>Penetration Testing</h3>
+          <div class="skill-list">
+            <span class="skill-tag">Network Pen Testing</span>
+            <span class="skill-tag">Web App Testing</span>
+            <span class="skill-tag">Reconnaissance</span>
+            <span class="skill-tag">Exploitation</span>
+            <span class="skill-tag">Post-Exploitation</span>
+            <span class="skill-tag">Reporting</span>
+          </div>
+        </div>
+
+        <div class="glass-panel skill-category">
+          <h3>Programming & Scripting</h3>
+          <div class="skill-list">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">SQL</span>
+            <span class="skill-tag">PowerShell</span>
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">Bash</span>
+            <span class="skill-tag">REST APIs</span>
+            <span class="skill-tag">Git/GitHub</span>
+            <span class="skill-tag">CI/CD</span>
+          </div>
+        </div>
+
+        <div class="glass-panel skill-category">
+          <h3>Infrastructure & Networking</h3>
+          <div class="skill-list">
+            <span class="skill-tag">Linux</span>
+            <span class="skill-tag">Windows Server</span>
+            <span class="skill-tag">TCP/IP</span>
+            <span class="skill-tag">DNS / DHCP</span>
+            <span class="skill-tag">Routing & Firewalls</span>
+            <span class="skill-tag">Proxmox VE</span>
+            <span class="skill-tag">VPN / Tunneling</span>
+            <span class="skill-tag">Cloud (AWS/Azure)</span>
+          </div>
+        </div>
+
+        <div class="glass-panel skill-category">
+          <h3>Frameworks & Standards</h3>
+          <div class="skill-list">
+            <span class="skill-tag">MITRE ATT&CK</span>
+            <span class="skill-tag">CISA KEV</span>
+            <span class="skill-tag">EPSS</span>
+            <span class="skill-tag">NIST CSF</span>
+            <span class="skill-tag">OWASP Top 10</span>
+            <span class="skill-tag">CIS Controls</span>
+          </div>
+        </div>
+
+        <div class="glass-panel skill-category">
+          <h3>Tools & Platforms</h3>
+          <div class="skill-list">
+            <span class="skill-tag">Shodan</span>
+            <span class="skill-tag">Recorded Future</span>
+            <span class="skill-tag">Correx</span>
+            <span class="skill-tag">HaloITSM</span>
+            <span class="skill-tag">Microsoft Entra</span>
+            <span class="skill-tag">Nmap</span>
+            <span class="skill-tag">Burp Suite</span>
+            <span class="skill-tag">Wireshark</span>
+            <span class="skill-tag">Proxmox VE</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== COMPETENCY EVIDENCE MAPPING ===== -->
+    <section class="content-section reveal" id="competency">
+      <div class="section-label">Competency Evidence</div>
+      <h2 class="section-title glass-text">Knowledge Mapping</h2>
+      <div class="section-desc">Direct mapping of cybersecurity competency areas to specific, verifiable evidence from certifications, professional experience, projects, and competitions documented on this page.</div>
+
+      <div class="competency-section">
+        <table class="competency-table">
+          <thead>
+            <tr>
+              <th>Competency Area</th>
+              <th>Evidence Sources</th>
+              <th>Specific Demonstration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="area-name">Security Fundamentals</td>
+              <td>
+                <div class="evidence-sources">
+                  <span class="evidence-badge cert">Security+</span>
+                  <span class="evidence-badge experience">Rackspace</span>
+                  <span class="evidence-badge experience">Linebarger</span>
+                </div>
+              </td>
+              <td>CompTIA Security+ validates core security concepts. Applied at Rackspace building enterprise security platforms and at Linebarger investigating/remediating malware infections using Correx.</td>
+            </tr>
+            <tr>
+              <td class="area-name">Vulnerability Management</td>
+              <td>
+                <div class="evidence-sources">
+                  <span class="evidence-badge project">CERBERUS</span>
+                  <span class="evidence-badge cert">Security+</span>
+                  <span class="evidence-badge experience">Rackspace</span>
+                </div>
+              </td>
+              <td>Built CERBERUS platform at Rackspace integrating CISA KEV, EPSS, and Shodan for enterprise vulnerability prioritization. Security+ validates foundational vulnerability assessment knowledge.</td>
+            </tr>
+            <tr>
+              <td class="area-name">Penetration Testing</td>
+              <td>
+                <div class="evidence-sources">
+                  <span class="evidence-badge cert">PenTest+</span>
+                  <span class="evidence-badge competition">NCL</span>
+                  <span class="evidence-badge competition">Rowdy CTF</span>
+                </div>
+              </td>
+              <td>CompTIA PenTest+ validates planning, scoping, exploitation, and reporting. NCL 3rd out of 3,600 teams. Rowdy CTF 3rd place demonstrates applied offensive skills under competition pressure.</td>
+            </tr>
+            <tr>
+              <td class="area-name">Security Automation</td>
+              <td>
+                <div class="evidence-sources">
+                  <span class="evidence-badge project">CERBERUS</span>
+                  <span class="evidence-badge project">ACER</span>
+                  <span class="evidence-badge project">SAGE</span>
+                  <span class="evidence-badge experience">Linebarger</span>
+                </div>
+              </td>
+              <td>All three Rackspace projects implement security automation. SAGE uses RAG for compliance Q&A. At Linebarger, built AI-assisted help-desk automation increasing productivity by 26%.</td>
+            </tr>
+            <tr>
+              <td class="area-name">Python</td>
+              <td>
+                <div class="evidence-sources">
+                  <span class="evidence-badge project">CERBERUS</span>
+                  <span class="evidence-badge project">ACER</span>
+                  <span class="evidence-badge project">SAGE</span>
+                  <span class="evidence-badge experience">Rackspace</span>
+                </div>
+              </td>
+              <td>Primary language for all security platforms at Rackspace. API integration, data processing, automation scripting, and system architecture implemented in Python.</td>
+            </tr>
+            <tr>
+              <td class="area-name">Linux</td>
+              <td>
+                <div class="evidence-sources">
+                  <span class="evidence-badge cert">Security+</span>
+                  <span class="evidence-badge cert">Network+</span>
+                  <span class="evidence-badge competition">NCL</span>
+                </div>
+              </td>
+              <td>Linux administration knowledge validated by Security+ and Network+. Applied in NCL competitions (log analysis, forensics). Multi-node Proxmox/Linux homelab with virtualized servers and services.</td>
+            </tr>
+            <tr>
+              <td class="area-name">Networking</td>
+              <td>
+                <div class="evidence-sources">
+                  <span class="evidence-badge cert">Network+</span>
+                  <span class="evidence-badge cert">Security+</span>
+                  <span class="evidence-badge experience">NEISD</span>
+                  <span class="evidence-badge competition">NCL</span>
+                </div>
+              </td>
+              <td>CompTIA Network+ validates TCP/IP, DNS, DHCP, routing, and firewall knowledge. Deployed network updates and troubleshot connectivity at NEISD. NCL network traffic analysis. Homelab with segmented networking, routing, and DNS.</td>
+            </tr>
+            <tr>
+              <td class="area-name">Threat Intelligence</td>
+              <td>
+                <div class="evidence-sources">
+                  <span class="evidence-badge project">CERBERUS</span>
+                  <span class="evidence-badge project">ACER</span>
+                  <span class="evidence-badge experience">Rackspace</span>
+                </div>
+              </td>
+              <td>CERBERUS integrates CISA KEV and MITRE ATT&CK threat data. ACER consumes Recorded Future dark-web intelligence. Collaborated with Rackspace Threat Intelligence team on platform requirements.</td>
+            </tr>
+            <tr>
+              <td class="area-name">Infrastructure Security</td>
+              <td>
+                <div class="evidence-sources">
+                  <span class="evidence-badge experience">Linebarger</span>
+                  <span class="evidence-badge experience">NEISD</span>
+                  <span class="evidence-badge cert">Network+</span>
+                </div>
+              </td>
+              <td>Malware investigation and endpoint remediation with Correx at Linebarger. Hardware deployment and network troubleshooting at NEISD. Network+ validates infrastructure and security architecture knowledge.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Ahaan Wanvari &middot; <a href="/">Back to Portfolio</a> &middot; <a href="mailto:ahaanwanvari@gmail.com">ahaanwanvari@gmail.com</a></p>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.06, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  </script>
+</body>
+</html>
