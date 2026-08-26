@@ -677,6 +677,90 @@
       font-style: italic;
     }
 
+    .writeup-details {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .writeup-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 1rem;
+    }
+
+    .writeup-technique h4 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .writeup-technique ol {
+      list-style: none;
+      counter-reset: step;
+      padding: 0;
+    }
+
+    .writeup-technique ol li {
+      counter-increment: step;
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      line-height: 1.7;
+      padding: 0.3rem 0 0.3rem 1.5rem;
+      position: relative;
+    }
+
+    .writeup-technique ol li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0.35rem;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      color: var(--accent);
+      font-size: 0.6rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .writeup-flag {
+      margin-top: 1rem;
+      padding: 0.6rem 1rem;
+      background: rgba(16, 185, 129, 0.06);
+      border: 1px solid rgba(16, 185, 129, 0.15);
+      border-radius: var(--radius-xs);
+    }
+
+    .writeup-flag .flag-label {
+      color: #6ee7b7;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .writeup-flag code {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+    }
+
+    code {
+      background: rgba(255, 255, 255, 0.06);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.82em;
+      color: #c4b5fd;
+    }
+
     /* ===== COMPETITIONS ===== */
     .competitions-grid {
       display: grid;
@@ -1251,18 +1335,62 @@
       <div class="section-desc">Cybersecurity analysis and technical documentation demonstrating communication of complex security concepts.</div>
 
       <div class="writing-grid">
+        <!-- back2basics -->
         <div class="glass-panel writing-card">
-          <h3>Sample Write-up 1</h3>
-          <div class="writing-date">Date TBD</div>
-          <p>Technical write-up demonstrating security analysis, methodology documentation, and clear communication of findings and recommendations.</p>
-          <span class="writing-placeholder">Full write-up will be linked here once provided</span>
+          <h3>back2basics — Binary Exploitation</h3>
+          <div class="writing-date">Pwn / Stack Overflow + ROP</div>
+          <p>Multi-stage ROP exploit leveraging a stack buffer overflow (<code>0x100</code> bytes into a <code>0x40</code> buffer, return address at offset 72) to pivot execution into <code>.bss</code>, leak libc via <code>puts(puts@got)</code>, and achieve code execution through <code>system("cat flag.txt")</code>.</p>
+          <div class="writeup-details">
+            <div class="writeup-meta">
+              <span class="tag">Kali Linux</span>
+              <span class="tag">amd64</span>
+              <span class="tag">NX enabled</span>
+              <span class="tag">No PIE</span>
+              <span class="tag">No canary</span>
+              <span class="tag">Partial RELRO</span>
+            </div>
+            <div class="writeup-technique">
+              <h4>Technique</h4>
+              <ol>
+                <li>Overflow saved return address at offset 72 via <code>pop rbp ; ret</code> gadget</li>
+                <li>Return to <code>0x401221</code> (mid-function <code>read(0, rbp-0x40, 0x100)</code>) to get a second write primitive into arbitrary writable memory</li>
+                <li>First pivot into <code>.bss</code>: call <code>puts(puts@got)</code> to leak libc, return to <code>back2basics</code> for another round</li>
+                <li>Second pivot into a <em>different</em> <code>.bss</code> region (avoids overwriting the live frame)</li>
+                <li>Leaked <code>puts</code> low bits match Ubuntu 24.04 glibc 2.39 (<code>puts</code> @ <code>0x87be0</code>)</li>
+                <li>Final payload: <code>system = libc_base + 0x58750</code> with <code>"cat flag.txt"</code> in <code>.bss</code></li>
+              </ol>
+            </div>
+          </div>
         </div>
 
+        <!-- Deja Vu -->
         <div class="glass-panel writing-card">
-          <h3>Sample Write-up 2</h3>
-          <div class="writing-date">Date TBD</div>
-          <p>Security research or penetration testing report showcasing structured methodology, evidence documentation, and professional reporting standards.</p>
-          <span class="writing-placeholder">Full write-up will be linked here once provided</span>
+          <h3>Deja Vu — ret2win</h3>
+          <div class="writing-date">Pwn / Stack Overflow</div>
+          <p>Classic ret2win challenge. <code>main</code> calls <code>gets(local_48)</code> with no bounds checking. Overflow the buffer by <code>0x48</code> bytes to overwrite the return address and redirect execution to the <code>win</code> function that prints the flag.</p>
+          <div class="writeup-details">
+            <div class="writeup-meta">
+              <span class="tag">Kali Linux</span>
+              <span class="tag">amd64</span>
+              <span class="tag">NX enabled</span>
+              <span class="tag">No PIE</span>
+              <span class="tag">No canary</span>
+              <span class="tag">Partial RELRO</span>
+              <span class="tag">SHSTK</span>
+              <span class="tag">IBT</span>
+            </div>
+            <div class="writeup-technique">
+              <h4>Technique</h4>
+              <ol>
+                <li><code>main @ 0x4012ec</code> calls <code>gets(local_48)</code> — unbounded input</li>
+                <li><code>win @ 0x4011f6</code> prints the flag</li>
+                <li>Payload: <code>"A" * 0x48 + p64(win+5)</code> — the <code>+5</code> skips the push rbp to fix stack alignment</li>
+              </ol>
+            </div>
+            <div class="writeup-flag">
+              <span class="flag-label">Flag:</span> <code>squ1rrel{w3v3_b33n_h3r3_b3f0r3_n0w_0nt0_b1gger_4nd_better}</code>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1285,7 +1413,7 @@
           <h3>National Cyber League (NCL)</h3>
           <div class="comp-org">Cyber Skyline</div>
           <p class="comp-detail">Competed in individual and team games covering cryptography, log analysis, network traffic analysis, open source intelligence, password cracking, scanning/reconnaissance, web application exploitation, and forensics.</p>
-          <span class="comp-achievement">3rd out of 3,600 Teams</span>
+          <span class="comp-achievement">5th out of 3,700 Teams</span>
         </div>
 
         <div class="glass-panel competition-card">
@@ -1432,7 +1560,7 @@
                   <span class="evidence-badge competition">Rowdy CTF</span>
                 </div>
               </td>
-              <td>CompTIA PenTest+ validates planning, scoping, exploitation, and reporting. NCL 3rd out of 3,600 teams. Rowdy CTF 3rd place demonstrates applied offensive skills under competition pressure.</td>
+              <td>CompTIA PenTest+ validates planning, scoping, exploitation, and reporting. NCL 5th out of 3,700 teams. Rowdy CTF 3rd place demonstrates applied offensive skills under competition pressure.</td>
             </tr>
             <tr>
               <td class="area-name">Security Automation</td>
