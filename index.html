@@ -828,7 +828,8 @@
 
     @media (max-width: 480px) {
       .navbar { border-radius: 16px; top: 0.5rem; left: 0.5rem; right: 0.5rem; transform: none; }
-      .nav-links { gap: 0.75rem; }
+      .navbar-content { flex-wrap: wrap; justify-content: center; gap: 0.4rem 1rem; }
+      .nav-links { flex-wrap: wrap; justify-content: center; gap: 0.4rem 0.75rem; }
       .nav-links a { font-size: 0.72rem; }
     }
   </style>
@@ -853,6 +854,7 @@
         <li><a href="#about">About</a></li>
         <li><a href="#experience">Experience</a></li>
         <li><a href="/projects.html">Demos</a></li>
+        <li><a href="/resume.html">Resume</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </div>
@@ -868,6 +870,7 @@
         <div class="hero-cta">
           <a href="#experience" class="btn btn-primary">Experience</a>
           <a href="/projects.html" class="btn btn-glass">Live Demos</a>
+          <a href="/resume.html" class="btn btn-glass">View Resume</a>
         </div>
       </div>
       <div class="scroll-cta" onclick="window.scrollBy({top: window.innerHeight * 0.85, behavior: 'smooth'})">
