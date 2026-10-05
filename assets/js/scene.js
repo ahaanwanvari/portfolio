@@ -38,21 +38,54 @@ function addLights(scene, color) {
   const fill = new THREE.PointLight(0x6cb5e3, 55); fill.position.set(-5,-3,2); scene.add(fill);
 }
 function heroObject(root) {
-  const knot = mesh(new THREE.TorusKnotGeometry(1.48,.43,240,32,2,3), materials.lime, root);
-  knot.rotation.set(.4,.2,-.3);
-  const inner = mesh(new THREE.IcosahedronGeometry(.62,4), materials.dark, root);
-  inner.scale.set(1,.8,1);
-  const wire = mesh(new THREE.IcosahedronGeometry(.72,2), new THREE.MeshBasicMaterial({color:0xe5ffc3,wireframe:true,transparent:true,opacity:.3}),root);
-  lineRing(2.63,0xb2ef86,root,[1.12,.26,.28],.4);
-  lineRing(2.28,0x95b0a4,root,[.28,.76,-.34],.25);
-  const orbit = new THREE.Group(); root.add(orbit);
-  for(let i=0;i<9;i++) {
-    const angle = i / 9 * Math.PI*2;
-    const radius = 2.48 + (i%3)*.12;
-    const dot = mesh(new THREE.OctahedronGeometry(i%3===0?.085:.04,0),i%3===0?materials.lime:materials.limeDark,orbit,Math.cos(angle)*radius,Math.sin(angle)*radius*.55,Math.sin(angle)*.8);
-    dot.rotation.z=angle;
+  // A small attack-surface model: many assets and signal paths converge on four actions.
+  const map = new THREE.Group();
+  map.rotation.set(-.58, -.16, -.12);
+  root.add(map);
+  const base = mesh(new THREE.BoxGeometry(6.25, 4.25, .18), materials.dark, map, 0, 0, -.25);
+  const baseEdges = new THREE.LineSegments(
+    new THREE.EdgesGeometry(base.geometry),
+    new THREE.LineBasicMaterial({ color: 0x78987a, transparent: true, opacity: .55 })
+  );
+  baseEdges.position.copy(base.position);
+  map.add(baseEdges);
+  const assetMaterial = new THREE.MeshStandardMaterial({ color: 0x40524b, metalness: .82, roughness: .33 });
+  const routeMaterial = new THREE.MeshBasicMaterial({ color: 0x9ac665, transparent: true, opacity: .42 });
+  const priorityMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xc8f06a, emissive: 0x7fa82a, emissiveIntensity: .55,
+    metalness: .38, roughness: .24, clearcoat: 1
+  });
+  const positions = [
+    [-2.55,-1.55],[-1.9,-1.55],[-1.25,-1.55],[1.3,-1.55],[1.95,-1.55],[2.58,-1.55],
+    [-2.55,-.75],[-1.9,-.75],[1.95,-.75],[2.58,-.75],
+    [-2.55,.7],[-1.9,.7],[1.95,.7],[2.58,.7],
+    [-2.55,1.52],[-1.9,1.52],[-1.25,1.52],[1.3,1.52],[1.95,1.52],[2.58,1.52]
+  ];
+  positions.forEach(([x,y], index) => {
+    const height = .3 + (index % 3) * .09;
+    mesh(new THREE.BoxGeometry(.39,.44,height), assetMaterial, map, x, y, height/2-.13);
+    const slot = index % 4;
+    const targetX = slot % 2 ? .46 : -.46;
+    const targetY = slot < 2 ? .43 : -.43;
+    const bendX = x < 0 ? -1.03 : 1.03;
+    const route = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(x,y,-.13),
+      new THREE.Vector3(bendX,y,-.13),
+      new THREE.Vector3(bendX,targetY,-.13),
+      new THREE.Vector3(targetX,targetY,-.13)
+    ], false, 'catmullrom', .12);
+    mesh(new THREE.TubeGeometry(route, 18, .011, 4, false), routeMaterial, map);
+  });
+  for (const x of [-.46,.46]) for (const y of [-.43,.43]) {
+    const block = mesh(new THREE.BoxGeometry(.68,.64,.65), priorityMaterial, map, x, y, .21);
+    const edges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(block.geometry),
+      new THREE.LineBasicMaterial({ color: 0xedffbb, transparent: true, opacity: .75 })
+    );
+    edges.position.copy(block.position);
+    map.add(edges);
   }
-  return { spin: root, accents:[orbit,inner,wire], speed:.0015 };
+  return { spin: root, accents: [], speed: 0 };
 }
 function cerberusObject(root) {
   const core = mesh(new THREE.IcosahedronGeometry(1.08,2),materials.lime,root);
@@ -104,7 +137,7 @@ for(const element of (reducedMotion ? [] : document.querySelectorAll('[data-scen
     element.appendChild(renderer.domElement);
     const scene=new THREE.Scene();
     const camera=new THREE.PerspectiveCamera(40,1,.1,100);
-    camera.position.z=name==='hero'?9:8.2;
+    camera.position.z=name==='hero'?10.5:8.2;
     addLights(scene,accentColors[name]);
     const root=new THREE.Group();scene.add(root);
     const model=builders[name](root);
@@ -122,7 +155,7 @@ function animate(now){
   for(const item of scenes){
     if(!item.visible)continue;
     const {model,renderer,scene,camera,name}=item;
-    if(!reducedMotion){model.spin.rotation.y+=model.speed*delta;model.spin.rotation.x+=(mouse.y*.09-model.spin.rotation.x)*.02;model.spin.rotation.z+=(mouse.x*.07-model.spin.rotation.z)*.02;if(name==='hero')model.accents[0].rotation.z-=.00045*delta;}
+    if(!reducedMotion){model.spin.rotation.y+=model.speed*delta;model.spin.rotation.x+=(mouse.y*.09-model.spin.rotation.x)*.02;model.spin.rotation.z+=(mouse.x*.07-model.spin.rotation.z)*.02;}
     renderer.render(scene,camera);
     if (!renderer.getContext().isContextLost()) item.element.classList.add('webgl-ready');
   }
