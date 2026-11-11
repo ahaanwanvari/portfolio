@@ -42,16 +42,16 @@ const mobileMenu = document.querySelector('.mobile-header details');
 mobileMenu?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => { mobileMenu.open = false; }));
 
 const sections = [...document.querySelectorAll('main section[id]')];
-const navLinks = [...document.querySelectorAll('.side-nav a[href^="#"]')];
+const navLinks = [...document.querySelectorAll('.side-nav a')];
 const breadcrumb = document.querySelector('.topbar > span');
-if (sections.length && navLinks.length) {
+if (sections.length && navLinks.some(link => link.getAttribute('href')?.startsWith('#'))) {
   const updateLocation = () => {
     const current = [...sections].reverse().find(section => section.getBoundingClientRect().top <= 125) || sections[0];
     navLinks.forEach(link => {
-      if (link.getAttribute('href') === `#${current.id}`) link.setAttribute('aria-current', 'page');
+      if (link.getAttribute('href') === (current.id === 'open-source' ? 'open-source.html' : `#${current.id}`)) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
-    if (breadcrumb) breadcrumb.innerHTML = `PORTFOLIO <span class="slash">/</span> ${current.id === 'lab' ? 'HOMELAB' : current.id === 'work' ? 'PROJECTS' : current.id.toUpperCase()}`;
+    if (breadcrumb) breadcrumb.innerHTML = `PORTFOLIO <span class="slash">/</span> ${current.id === 'lab' ? 'HOMELAB' : current.id === 'work' ? 'PROJECTS' : current.id === 'open-source' ? 'OPEN SOURCE' : current.id.toUpperCase()}`;
   };
   window.addEventListener('scroll', updateLocation, { passive: true });
   updateLocation();
