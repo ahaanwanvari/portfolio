@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <meta name="description" content="Illustrative, simplified preview of the HashOS v0.8 guided cracking workspace.">
+  <title>HashOS — Interface Preview</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/hashos-preview.css">
+</head>
+<body>
+  <div class="preview-note"><span>HASHOS / SIMPLIFIED INTERFACE PREVIEW</span><span>Illustrative sample · no live session data</span><a href="open-source.html#hashos">Back to project ↗</a></div>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Illustrative app navigation">
+      <div class="brand">HashOS <span>v0.8</span></div>
+      <p class="nav-label">CRACKING TOOLS</p>
+      <div class="nav-list"><div class="nav-item selected"><span class="nav-icon">▦</span>Workspace</div><div class="nav-item"><span class="nav-icon">▤</span>Files</div><div class="nav-item"><span class="nav-icon">◇</span>Hardware</div><div class="nav-item"><span class="nav-icon">≡</span>Documentation</div></div>
+      <div class="sidebar-bottom"><p class="nav-label">ABOUT THIS VIEW</p><p>This static preview shows the guided workflow with example content. It does not connect to an appliance or run jobs.</p></div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar"><span>LOCAL WORKSPACE <b>/</b> CRACKING</span><span>INTERFACE PREVIEW</span></header>
+      <main>
+        <div class="page-heading"><div><p class="eyebrow">HASHOS / WORKSPACE</p><h1>Cracking workspace</h1><p>Add hashes, confirm their type, choose a strategy, and follow your results.</p></div><span class="host-tag">hashos.local</span></div>
+        <div class="summary-grid" aria-label="Workspace capabilities"><div class="summary-card"><span>COMPUTE DEVICE</span><strong>Automatic selection</strong><small>Only validated devices can run jobs</small></div><div class="summary-card"><span>JOB QUEUE</span><strong>One at a time</strong><small>Shared compute lock</small></div><div class="summary-card"><span>SESSION STORAGE</span><strong>Volatile by default</strong><small>Encrypted persistence is optional</small></div></div>
+        <div class="mode-tabs"><div class="active">Guided plan</div><div>Advanced workspace</div></div>
+        <div class="workspace-grid">
+          <section class="card plan-card" aria-labelledby="plan-title"><div class="card-head"><h2 id="plan-title">Build a challenge plan</h2><span>AUTHORIZED HASHES ONLY</span></div><p class="card-intro">Review a sequence of focused attacks before starting. You can stop and inspect the work at any point.</p>
+            <div class="step"><div class="step-title"><span>01</span><h3>Add and identify hashes</h3></div><div class="input-row"><div class="sample-field"><span>HASH FILE</span><strong>example-hashes.txt</strong><small>Illustrative sample input</small></div><span class="small-action">Upload hashes</span></div><div class="callout"><span class="callout-mark">i</span><div><strong>Confirm your hash type</strong><p>Digest shape can match several algorithms. Check the challenge context before choosing a mode.</p></div></div></div>
+            <div class="step"><div class="step-title"><span>02</span><h3>Choose a focused strategy</h3></div><div class="field-grid"><div class="field"><span>WHAT DO YOU KNOW?</span><div>Common passwords, then mutations <b>⌄</b></div></div><div class="field"><span>DICTIONARY</span><div>Default: common 10k <b>⌄</b></div></div></div><div class="field optional"><span>THEME WORDS <em>OPTIONAL</em></span><div>Words from the challenge can narrow the first stages.</div></div></div>
+            <div class="step last-step"><div class="step-title"><span>03</span><h3>Set a budget and review</h3></div><div class="field-grid"><div class="field"><span>MAXIMUM ACTIVE TIME</span><div>10 minutes <b>⌄</b></div></div><div class="field"><span>COMPUTE</span><div>Best validated device, or John CPU <b>⌄</b></div></div></div><div class="plan-footer"><span>Inputs are reviewed before execution.</span><div class="primary-action">Check and review plan <b>→</b></div></div></div>
+          </section>
+          <aside class="right-column"><section class="card challenges"><div class="card-head"><h2>Challenges</h2><span>0</span></div><div class="empty-state"><div class="empty-icon">▦</div><strong>Ready when you are</strong><p>Your plans appear here after review and start.</p></div></section><section class="card session-card"><p class="eyebrow">SESSION NOTES</p><h2>Save before shutting down</h2><p>In a live session, jobs and uploads reset on reboot unless encrypted persistence is attached. Export results before powering off.</p><div class="session-rule"></div><p>Hardware validation and jobs use a shared compute lock. One job runs at a time.</p></section></aside>
+        </div>
+        <section class="card output-card"><div class="card-head"><h2>Output &amp; results</h2><span>NO JOB SELECTED</span></div><div class="output-empty"><span>›_</span> Engine output appears when a stage starts.</div></section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
